@@ -1,0 +1,145 @@
+/**
+ * GoldRisk design tokens.
+ *
+ * Single source of truth for color, so no component should hard-code
+ * a hex value. The visual identity is a layered "premium fintech" system:
+ *
+ *  DARK  — deep navy main (#0D1117), #11151B cards, #1A2029 raised surfaces,
+ *          subtle #151A22/"#202731" bands, #080B10 deep footer, muted amber
+ *          gold (#C9A227 / #D6B34A) used as a strategic accent.
+ *  LIGHT — warm ivory page (#F7F4ED), white cards, warm-gray raised surfaces,
+ *          deep navy/charcoal footer (#0B1018), sophisticated gold.
+ *
+ * Dark is the default (`:root`); Light applies via `data-theme="light"`.
+ * Both are intentionally designed, not inverted versions of each other.
+ */
+
+:root {
+  /* ===== Dark (default) ===== */
+  color-scheme: dark;
+
+  /* Surfaces — layered navy */
+  --color-bg: #0d1117; /* main */
+  --color-surface: #151a22; /* cards / navbar */
+  --color-surface-raised: #1a2029; /* raised cards */
+  --color-band: #11151b; /* subtle section bands */
+  --color-surface-deep: #080b10; /* footer / deep bands */
+
+  /* Borders */
+  --color-border: #232a34;
+  --color-border-strong: #2e3744;
+
+  /* Text */
+  --color-text: #eef2f7;
+  --color-text-muted: #9aa5b4;
+  --color-text-faint: #647080;
+
+  /* Gold accent — muted amber, never bright yellow */
+  --color-gold: #c9a227;
+  --color-gold-strong: #d6b34a;
+  --color-gold-muted: #8c7427;
+  --color-on-gold: #0b0e14;
+
+  /* Semantic */
+  --color-error: #e0595c;
+  --color-error-muted: #3a1f21;
+  --color-success: #3fb68c;
+  --color-success-muted: #14332a;
+  --color-warning: #d9a441;
+  --color-warning-muted: #35290f;
+
+  /* Focus ring */
+  --color-focus-ring: #d6b34a;
+
+  /* App footer (deep navy in both themes — always light text) */
+  --color-footer-bg: #080b10;
+  --color-footer-text: #eef2f7;
+  --color-footer-muted: #9aa5b4;
+  --color-footer-faint: #647080;
+  --color-footer-border: #1c2330;
+
+  /* ===== Ambient decoration (dark) ===== */
+  --color-glow: rgba(214, 179, 74, 0.1);
+  --color-glow-soft: rgba(221, 196, 122, 0.05);
+  --color-card-shadow: rgba(0, 0, 0, 0.5);
+  --color-card-hover: rgba(201, 162, 39, 0.15);
+  --color-gold-glow: rgba(201, 162, 39, 0.24);
+  --color-hero-glow: rgba(214, 179, 74, 0.13);
+
+  /* ===== Layered section surfaces (dark) ===== */
+  /* Deep-navy landing band for the final CTA, one step above the footer. */
+  --color-section-deep: #0a1018;
+  --color-cta-glow: rgba(214, 179, 74, 0.16);
+  /* Whisper of gold across raised feature/security bands. */
+  --color-band-glow: rgba(214, 179, 74, 0.05);
+
+  /* ===== Brand hover — cool electric-blue contrast (dark) ===== */
+  --color-brand-glow: rgba(88, 150, 255, 0.22);
+  --color-brand-glow-strong: rgba(125, 180, 255, 0.5);
+  --color-brand-hover-text: #d7e6ff;
+}
+
+[data-theme="light"] {
+  /* ===== Light — warm ivory / cream identity ===== */
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-bg: #f7f4ed; /* warm ivory page */
+  --color-surface: #ffffff; /* cards / header */
+  --color-surface-raised: #f1ecdf; /* raised / secondary */
+  --color-band: #efe9dc; /* subtle bands */
+  --color-surface-deep: #0b1018; /* deep navy footer / CTA */
+
+  /* Borders */
+  --color-border: #e4ddcd;
+  --color-border-strong: #d4ccb8;
+
+  /* Text */
+  --color-text: #1a2029;
+  --color-text-muted: #5c6470;
+  --color-text-faint: #8a92a0;
+
+  /* Gold accent */
+  --color-gold: #a9822b;
+  --color-gold-strong: #8a6b1e;
+  --color-gold-muted: #dec99a;
+  --color-on-gold: #141106;
+
+  /* Semantic */
+  --color-error: #c23b37;
+  --color-error-muted: #fbeae9;
+  --color-success: #2f8f61;
+  --color-success-muted: #e4f2ea;
+  --color-warning: #a5771f;
+  --color-warning-muted: #f8efd9;
+
+  /* Focus ring */
+  --color-focus-ring: #a9822b;
+
+  /* App footer (deep navy in both themes — always light text) */
+  --color-footer-bg: #0b1018;
+  --color-footer-text: #eef2f7;
+  --color-footer-muted: #9aa5b4;
+  --color-footer-faint: #647080;
+  --color-footer-border: #222a36;
+
+  /* ===== Ambient decoration (light) ===== */
+  --color-glow: rgba(169, 130, 43, 0.12);
+  --color-glow-soft: rgba(169, 130, 43, 0.05);
+  --color-card-shadow: rgba(80, 65, 30, 0.1);
+  --color-card-hover: rgba(169, 130, 43, 0.14);
+  --color-gold-glow: rgba(169, 130, 43, 0.28);
+  --color-hero-glow: rgba(169, 130, 43, 0.18);
+
+  /* ===== Layered section surfaces (light) ===== */
+  /* Deep-navy landing band for the final CTA (light theme keeps a deep
+     panel so the strong-CTA contrast is supported without inverting). */
+  --color-section-deep: #0d1420;
+  --color-cta-glow: rgba(201, 162, 39, 0.2);
+  --color-band-glow: rgba(169, 130, 43, 0.08);
+
+  /* ===== Brand hover — cool deep-blue contrast (light) ===== */
+  --color-brand-glow: rgba(41, 101, 235, 0.16);
+  --color-brand-glow-strong: rgba(29, 78, 216, 0.38);
+  --color-brand-hover-text: #1d4ed8;
+}
