@@ -1,0 +1,37 @@
+/**
+ * GoldRisk design tokens.
+ *
+ * Single source of truth for color, so no component should hard-code
+ * a hex value. Everything here is dark-first: the base surfaces are
+ * near-black, gold is reserved for accents and calls to action only.
+ */
+:root {
+  /* Surfaces */
+  --color-bg: #0a0a0c;
+  --color-surface: #121214;
+  --color-surface-raised: #17171a;
+  --color-border: #26262a;
+  --color-border-strong: #34343a;
+
+  /* Text */
+  --color-text: #f2f1ed;
+  --color-text-muted: #9b9a97;
+  --color-text-faint: #6b6a68;
+
+  /* Gold accent */
+  --color-gold: #c6a15b;
+  --color-gold-strong: #d9b876;
+  --color-gold-muted: #8a7442;
+  --color-on-gold: #0a0a0c;
+
+  /* Semantic */
+  --color-error: #e0524f;
+  --color-error-muted: #3a2020;
+  --color-success: #4caf7d;
+  --color-success-muted: #1c3327;
+  --color-warning: #d9a441;
+  --color-warning-muted: #3a3018;
+
+  /* Focus ring */
+  --color-focus-ring: #d9b876;
+}
