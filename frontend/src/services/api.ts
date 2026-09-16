@@ -2,9 +2,7 @@ import type { ApiResult } from '../types/api'
 
 /**
  * Base URL for the GoldRisk API, read from the environment so it is never
- * hard-coded into components. There is no backend in this phase, so this
- * value is unused for now beyond establishing the pattern future services
- * should follow.
+ * hard-coded into components or service modules.
  */
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
 
@@ -15,12 +13,9 @@ export interface RequestOptions {
 }
 
 /**
- * Thin fetch wrapper that the real services (auth, accounts, calculator
- * history, etc.) will build on once a backend exists. It intentionally does
- * not fabricate any responses — calling it today will simply hit whatever
- * VITE_API_BASE_URL points to, or fail with a network error if that is
- * unset. No component should call `fetch` directly; they should go through
- * a service module that wraps this function.
+ * Thin fetch wrapper used by the GoldRisk API service modules.
+ * Components should not call fetch directly; they should go through
+ * this function or a service module built on top of it.
  */
 export async function apiRequest<T>(
   path: string,
