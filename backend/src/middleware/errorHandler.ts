@@ -1,6 +1,5 @@
 import type { ErrorRequestHandler, Request, Response } from 'express'
 import { HttpError } from '../utils/HttpError.ts'
-import { config } from '../config/env.ts'
 
 interface MalformedJsonError {
   type: string
