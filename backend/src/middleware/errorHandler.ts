@@ -64,9 +64,8 @@ export const errorHandler: ErrorRequestHandler = (
     return
   }
 
-  if (!config.isProduction) {
-    console.error('[GoldRisk backend] Unexpected error', err)
-  }
+  console.error('[GoldRisk backend] Unexpected error', err)
+  
   const body: ErrorResponseBody = {
     success: false,
     error: {
