@@ -50,7 +50,7 @@ const de = {
       badge: 'XAUUSD-Positionsgrößen',
       title: 'Kennen Sie Ihr Risiko, bevor Sie einsteigen.',
       body: 'GoldRisk berechnet die Positionsgröße für Ihren XAUUSD-Trade aus Ihrem Kontostand, Ihrem Risiko, Ihrem Einstiegspreis und Ihrem Stop-Loss.',
-      primaryCta: 'Position Berechnen',
+      primaryCta: 'Anmelden und loslegen',
       secondaryCta: 'So Funktioniert Es',
     },
     preview: {
@@ -168,7 +168,7 @@ const de = {
     finalCta: {
       title: 'Verwandeln Sie Ihr Setup in eine präzise Positionsgröße.',
       body: 'Öffnen Sie den GoldRisk-Rechner und dimensionieren Sie Ihren nächsten Gold-Trade auf das Risiko, das Sie tatsächlich gewählt haben.',
-      button: 'GoldRisk-Rechner Öffnen',
+      button: 'Login and Get Started',
     }
   },
 
@@ -670,3 +670,4 @@ const de = {
 }
 
 export default de
+

@@ -50,7 +50,7 @@ const fr = {
       badge: 'Dimensionnement de Position XAUUSD',
       title: 'Connaissez votre risque avant d’entrer.',
       body: 'GoldRisk calcule la taille de position de votre opération XAUUSD à partir du solde de votre compte, de votre risque, de votre prix d’entrée et de votre stop loss.',
-      primaryCta: 'Calculer Votre Position',
+      primaryCta: 'Connectez-vous et commencez',
       secondaryCta: 'Comment Ça Marche',
     },
     preview: {
@@ -168,7 +168,7 @@ const fr = {
     finalCta: {
       title: 'Transformez votre configuration en taille de position précise.',
       body: 'Ouvrez la calculatrice GoldRisk et dimensionnez votre prochaine opération sur l’or au risque que vous avez réellement choisi.',
-      button: 'Ouvrir la Calculatrice GoldRisk',
+      button: 'Login and Get Started',
     }
   },
 
@@ -671,3 +671,4 @@ const fr = {
 }
 
 export default fr
+

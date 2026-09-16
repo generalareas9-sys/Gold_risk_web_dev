@@ -168,7 +168,7 @@ const am = {
     finalCta: {
       title: 'የንግድ ዝግጅትዎን ወደ ትክክለኛ የአቋም መጠን ይቀይሩ።',
       body: 'የ GoldRisk አስሊ ይክፈቱ እና የሚቀጥለውን የወርቅ ንግድዎን ለመረጡት ስጋት ያስተካክሉ።',
-      button: 'የ GoldRisk አስሊ ይክፈቱ',
+      button: 'Login and Get Started',
     }
   },
 
@@ -670,3 +670,4 @@ const am = {
 }
 
 export default am
+

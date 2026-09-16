@@ -53,7 +53,7 @@ const en = {
       badge: 'XAUUSD Position Sizing',
       title: 'Know your risk before you enter.',
       body: 'GoldRisk calculates the position size for your XAUUSD trade using your account balance, risk, entry price and stop loss.',
-      primaryCta: 'Calculate Your Position',
+      primaryCta: 'Login and Get Started',
       secondaryCta: 'How It Works',
     },
     preview: {
@@ -171,7 +171,7 @@ const en = {
     finalCta: {
       title: 'Turn your trade setup into a precise position size.',
       body: 'Open the GoldRisk calculator and size your next gold trade to the risk you actually chose.',
-      button: 'Open GoldRisk Calculator',
+      button: 'Login and Get Started',
     }
   },
 

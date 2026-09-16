@@ -169,7 +169,7 @@ const ar = {
     finalCta: {
       title: 'حوّل إعداد صفقتك إلى حجم دقيق.',
       body: 'افتح حاسبة GoldRisk وقيّم صفقة الذهب التالية حسب المخاطرة التي اخترتها فعلاً.',
-      button: 'افتح حاسبة GoldRisk',
+      button: 'Login and Get Started',
     }
   },
 
@@ -671,3 +671,4 @@ const ar = {
 }
 
 export default ar
+

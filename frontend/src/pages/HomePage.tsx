@@ -77,7 +77,7 @@ export function HomePage() {
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link
-                  to={paths.positionSizeCalculator}
+                  to={paths.login}
                   className="inline-flex items-center justify-center rounded-xl bg-gold px-7 py-3.5 text-base font-medium text-on-gold shadow-lg shadow-gold-glow/40 transition-all duration-200 hover:bg-gold-strong hover:shadow-gold-glow/60"
                 >
                   {home.hero.primaryCta}
@@ -283,7 +283,7 @@ export function HomePage() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-text-muted">{home.finalCta.body}</p>
             <Link
-              to={paths.positionSizeCalculator}
+              to={paths.login}
               className="mt-8 inline-flex items-center justify-center rounded-xl bg-gold px-8 py-4 text-base font-medium text-on-gold shadow-lg shadow-gold-glow/40 transition-all duration-200 hover:bg-gold-strong hover:shadow-gold-glow/60"
             >
               {home.finalCta.button}

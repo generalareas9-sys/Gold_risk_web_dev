@@ -168,7 +168,7 @@ const es = {
     finalCta: {
       title: 'Convierte tu configuración de operación en un tamaño de posición preciso.',
       body: 'Abre la calculadora de GoldRisk y dimensiona tu próxima operación de oro al riesgo que realmente elegiste.',
-      button: 'Abrir Calculadora GoldRisk',
+      button: 'Login and Get Started',
     }
   },
 
@@ -670,3 +670,4 @@ const es = {
 }
 
 export default es
+
