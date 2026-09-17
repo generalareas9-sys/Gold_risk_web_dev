@@ -105,6 +105,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [login],
   )
 
+  const applySession = useCallback((newToken: string, newUser: AuthUser) => {
+    persistAuth(newToken, newUser)
+    setToken(newToken)
+    setUser(newUser)
+    setError(null)
+  }, [])
+
   const logout = useCallback(async (): Promise<void> => {
     if (token !== null) {
       await logoutUser(token)
@@ -117,8 +124,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const clearError = useCallback(() => setError(null), [])
 
   const value = useMemo<AuthContextValue>(
-    () => ({ user, token, isAuthenticated, isLoading, error, login, register, logout, clearError }),
-    [user, token, isAuthenticated, isLoading, error, login, register, logout, clearError],
+    () => ({
+      user,
+      token,
+      isAuthenticated,
+      isLoading,
+      error,
+      login,
+      register,
+      applySession,
+      logout,
+      clearError,
+    }),
+    [user, token, isAuthenticated, isLoading, error, login, register, applySession, logout, clearError],
   )
 
   return <AuthContext value={value}>{children}</AuthContext>

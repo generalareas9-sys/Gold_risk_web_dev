@@ -19,6 +19,7 @@ export const paths = {
   terms: '/terms',
   login: '/login',
   register: '/register',
+  googleCallback: '/auth/google/callback',
   calculator: '/calculator',
   accounts: '/accounts',
   history: '/history',

@@ -469,7 +469,7 @@ const en = {
     or: 'or',
     continueWithGoogle: 'Continue with Google',
     signUpWithGoogle: 'Sign up with Google',
-    googleUnavailable: 'Google sign-in is not available yet. Use email and password for now.',
+    googleSignInFailed: 'Google sign-in failed. Please try again or use email and password.',
   },
 
   calcPage: {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Brand } from '../common/Brand'
-import { PageContainer } from './PageContainer'
 import { authenticatedNavLinks, paths, publicNavLinks } from '../../routes/paths'
 import { cn } from '../../utils/cn'
 import { useAuth } from '../../auth/useAuth'
@@ -9,26 +8,47 @@ import { useLanguage } from '../../i18n/useLanguage'
 import { LanguageSelect, LanguageMenuList } from '../../i18n/LanguageSelect'
 import { ThemeToggle } from '../../theme/ThemeToggle'
 
+/**
+ * Three-zone public navbar.
+ *
+ *   [ BRAND ]        [ MAIN NAVIGATION ]        [ ACCOUNT / SETTINGS ]
+ *
+ * A `1fr auto 1fr` grid keeps the center navigation exactly centered; the
+ * brand hugs the reading start and the account/settings cluster hugs the
+ * reading end, so the RTL layout mirrors automatically (grid follows the
+ * document direction). The full desktop header — brand, all six links,
+ * Log in / Get Started, language and theme — is visible from the `xl`
+ * breakpoint (1280px) upward and fits comfortably at 1366px. Below `xl`
+ * the navigation and account cluster move into the mobile menu, because
+ * at 1024–1279px even the default English links cannot fit on one line
+ * without cramping.
+ */
+
+const NAV_VISIBLE = 'xl:flex'
+const ACTIONS_VISIBLE = 'xl:flex'
+const DIVIDER_VISIBLE = 'xl:block'
+const MENU_BUTTON_VISIBLE = 'xl:hidden'
+
 const linkClasses = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'relative text-[15px] font-semibold transition-colors duration-150',
-    'after:absolute after:inset-x-0 after:-bottom-1.5 after:h-0.5 after:origin-center after:scale-x-0 after:rounded-full after:bg-gold after:transition-transform after:duration-200',
-    isActive ? 'text-gold after:scale-x-100' : 'text-text-muted hover:text-text',
+    'relative whitespace-nowrap rounded-lg px-1.5 py-2 text-sm font-semibold transition-colors duration-150',
+    'after:absolute after:inset-x-1.5 after:bottom-[1px] after:h-0.5 after:origin-center after:scale-x-0 after:rounded-full after:bg-gold after:transition-transform after:duration-200',
+    isActive ? 'text-gold after:scale-x-100' : 'text-text-muted hover:bg-surface-raised hover:text-text',
   )
 
 function PublicActions() {
   const { t } = useLanguage()
   return (
-    <div className="hidden items-center gap-3 lg:flex">
+    <div className={cn('hidden items-center gap-2.5', ACTIONS_VISIBLE)}>
       <NavLink
         to={paths.login}
-        className="px-2 text-sm text-text-muted transition-colors duration-150 hover:text-text"
+        className="rounded-lg px-2 py-2 text-sm font-medium text-text-muted transition-colors duration-150 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
       >
         {t('navigation.login')}
       </NavLink>
       <NavLink
         to={paths.register}
-        className="rounded-lg bg-gold px-4 py-2 text-sm font-medium text-on-gold shadow-lg shadow-gold-glow transition-all duration-150 hover:bg-gold-strong"
+        className="rounded-lg bg-gold px-3.5 py-2 text-sm font-medium text-on-gold shadow-lg shadow-gold-glow transition-all duration-150 hover:bg-gold-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
       >
         {t('navigation.getStarted')}
       </NavLink>
@@ -45,7 +65,7 @@ function SignedInActions({
 }) {
   const { t } = useLanguage()
   return (
-    <div className="hidden items-center gap-4 lg:flex">
+    <div className={cn('hidden items-center gap-4', ACTIONS_VISIBLE)}>
       <span
         className="flex items-center gap-2 text-sm text-text-muted"
         title={t('navigation.signedInAs', { email: email ?? '' })}
@@ -53,12 +73,12 @@ function SignedInActions({
         <span className="flex h-7 w-7 items-center justify-center rounded-full border border-border-strong bg-surface-raised font-mono text-xs text-gold">
           {(email ?? 'T').charAt(0).toUpperCase()}
         </span>
-        <span className="max-w-[12rem] truncate">{email}</span>
+        <span className="hidden max-w-[12rem] truncate xl:inline">{email}</span>
       </span>
       <button
         type="button"
         onClick={onLogout}
-        className="rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-text-muted transition-colors duration-150 hover:border-gold hover:text-gold"
+        className="rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-text-muted transition-colors duration-150 hover:border-gold hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
       >
         {t('navigation.logout')}
       </button>
@@ -101,18 +121,21 @@ export function Navbar() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"
       />
-      <PageContainer className="flex h-16 items-center justify-between gap-4">
+
+      <div className="mx-auto grid h-16 w-full max-w-none grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:px-6 lg:px-6 xl:px-5 xl:max-w-[1536px]">
+        {/* ZONE 1 — Brand */}
         <NavLink
           to={isAuthenticated ? paths.calculator : paths.home}
           aria-label={t('navigation.home')}
-          className="brand-trigger relative inline-flex shrink-0 items-center rounded-lg"
+          className="brand-trigger relative inline-flex shrink-0 items-center justify-self-start rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
         >
           <Brand />
         </NavLink>
 
+        {/* ZONE 2 — Center navigation */}
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-7 xl:flex 2xl:gap-8"
+          className={cn('hidden items-center justify-center gap-0.5', NAV_VISIBLE)}
         >
           {navLinks.map((link) => (
             <NavLink key={link.path} to={link.path} className={linkClasses}>
@@ -121,18 +144,26 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2.5">
+        {/* ZONE 3 — Account / settings */}
+        <div className="flex items-center justify-end gap-2">
+          <span
+            aria-hidden="true"
+            className={cn('hidden h-6 w-px self-center bg-border/70', DIVIDER_VISIBLE)}
+          />
           {isAuthenticated ? (
             <SignedInActions email={user?.email ?? null} onLogout={handleLogout} />
           ) : (
             <PublicActions />
           )}
-          <LanguageSelect />
+          <LanguageSelect compact />
           <ThemeToggle />
 
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded p-2 text-text lg:hidden"
+            className={cn(
+              'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-text-muted transition-colors duration-200 hover:border-gold/50 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring',
+              MENU_BUTTON_VISIBLE,
+            )}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
             aria-label={isMenuOpen ? t('navigation.closeMenu') : t('navigation.openMenu')}
@@ -141,15 +172,18 @@ export function Navbar() {
             <MenuIcon isOpen={isMenuOpen} />
           </button>
         </div>
-      </PageContainer>
+      </div>
 
       {isMenuOpen && (
         <nav
           id="mobile-menu"
           aria-label="Primary"
-          className="animate-menu-in border-t border-border bg-surface/95 backdrop-blur-xl lg:hidden"
+          className={cn(
+            'animate-menu-in border-t border-border bg-surface/95 backdrop-blur-xl',
+            MENU_BUTTON_VISIBLE,
+          )}
         >
-          <PageContainer className="flex flex-col gap-1 py-4">
+          <div className="mx-auto grid max-w-none grid-cols-1 gap-1 px-4 py-4 sm:px-6 lg:px-6 xl:max-w-[1536px]">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
@@ -203,7 +237,10 @@ export function Navbar() {
             )}
 
             <LanguageMenuList />
-          </PageContainer>
+            <div className="mt-3 border-t border-border pt-3">
+              <ThemeToggle />
+            </div>
+          </div>
         </nav>
       )}
     </header>

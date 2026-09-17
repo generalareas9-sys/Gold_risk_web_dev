@@ -82,6 +82,30 @@ function parseJwtSecret(value: string | undefined): string | null {
  * Parses JWT_EXPIRES_IN as a "1d", "4h", "15m", "30s" style duration. Falls
  * back to 15 minutes so short-lived access tokens are the default.
  */
+/**
+ * Parses an optional Google OAuth value. Blank values yield `null` so the API
+ * can boot without Google auth configured; the Google endpoints then fail
+ * fast with a clear configuration error instead of misbehaving silently.
+ */
+function parseOptional(value: string | undefined): string | null {
+  if (value === undefined || value.trim() === '') {
+    return null
+  }
+  return value.trim()
+}
+
+/**
+ * Parses FRONTEND_URL. The app redirects the browser here after a successful
+ * Google OAuth exchange, so it must be the actual frontend origin — the Vite
+ * dev server by default, overridden in production (e.g. https://goldrisk.vercel.app).
+ */
+function parseFrontendUrl(value: string | undefined): string {
+  if (value === undefined || value.trim() === '') {
+    return 'http://localhost:5173'
+  }
+  return value.trim().replace(/\/+$/, '')
+}
+
 function parseJwtExpiresIn(value: string | undefined): JwtExpiresIn {
   if (value === undefined || value.trim() === '') {
     return '15m'
@@ -102,6 +126,10 @@ const corsOrigins = parseCorsOrigins(process.env.CORS_ORIGIN)
 const databaseConnectionString = parseDatabaseUrl(process.env.DATABASE_URL)
 const jwtSecret = parseJwtSecret(process.env.JWT_SECRET)
 const jwtExpiresIn = parseJwtExpiresIn(process.env.JWT_EXPIRES_IN)
+const googleClientId = parseOptional(process.env.GOOGLE_CLIENT_ID)
+const googleClientSecret = parseOptional(process.env.GOOGLE_CLIENT_SECRET)
+const googleCallbackUrl = parseOptional(process.env.GOOGLE_CALLBACK_URL)
+const frontendUrl = parseFrontendUrl(process.env.FRONTEND_URL)
 
 if (nodeEnv === 'production' && jwtSecret === null) {
   throw new Error(
@@ -115,11 +143,17 @@ export const config = {
   isDevelopment: nodeEnv === 'development',
   port,
   corsOrigins,
+  frontendUrl,
   database: {
     connectionString: databaseConnectionString,
   },
   jwt: {
     secret: jwtSecret,
     expiresIn: jwtExpiresIn,
+  },
+  google: {
+    clientId: googleClientId,
+    clientSecret: googleClientSecret,
+    callbackUrl: googleCallbackUrl,
   },
 } as const

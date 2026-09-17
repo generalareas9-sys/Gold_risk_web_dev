@@ -50,11 +50,47 @@ class MemoryUserRepository implements UserRepository {
       email: email.trim().toLowerCase(),
       passwordHash,
       name,
+      googleId: null,
       createdAt: now,
       updatedAt: now,
     }
     this.usersById.set(id, user)
     return user
+  }
+
+  async findByGoogleId(googleId: string): Promise<UserRecord | null> {
+    for (const user of this.usersById.values()) {
+      if (user.googleId === googleId) return user
+    }
+    return null
+  }
+
+  async createGoogleUser(
+    email: string,
+    name: string | null,
+    googleId: string,
+  ): Promise<UserRecord> {
+    const now = new Date()
+    const id = String(this.nextId++)
+    const user: UserRecord = {
+      id,
+      email: email.trim().toLowerCase(),
+      passwordHash: null,
+      name,
+      googleId,
+      createdAt: now,
+      updatedAt: now,
+    }
+    this.usersById.set(id, user)
+    return user
+  }
+
+  async setGoogleId(id: string, googleId: string): Promise<UserRecord> {
+    const user = this.usersById.get(id)
+    if (user === undefined) throw new Error('No such user')
+    const updated: UserRecord = { ...user, googleId, updatedAt: new Date() }
+    this.usersById.set(id, updated)
+    return updated
   }
 
   removeById(id: string): void {

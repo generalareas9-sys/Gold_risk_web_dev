@@ -1,5 +1,6 @@
 import type { UserRepository, UserRecord } from '../db/usersRepository.ts'
 import type { TokenStore } from '../db/tokenStore.ts'
+import type { GoogleProfile } from './googleService.ts'
 import { signAccessToken } from './jwt.ts'
 import { hashPassword, verifyPassword } from './password.ts'
 import { HttpError } from '../utils/HttpError.ts'
@@ -92,6 +93,36 @@ export async function loginUser(
   const passwordMatches = await verifyPassword(password, user.passwordHash)
   if (!passwordMatches) {
     throw new HttpError(401, 'Invalid email or password.')
+  }
+
+  const token = signAccessToken({ id: user.id, email: user.email })
+  return { token, user: toPublicUser(user) }
+}
+
+/**
+ * Authenticates (or creates) a user from a Google identity that the backend
+ * has already verified directly against Google. Account linking by email is
+ * only performed when Google reports the address as verified — otherwise the
+ * identity is rejected. Google-authenticated users never receive a password.
+ */
+export async function googleLogin(
+  userRepository: UserRepository,
+  profile: GoogleProfile,
+): Promise<LoginResult> {
+  if (!profile.emailVerified) {
+    throw new HttpError(403, 'The Google account email is not verified.')
+  }
+
+  let user = await userRepository.findByGoogleId(profile.googleId)
+  if (user === null) {
+    const byEmail = await userRepository.findByEmail(profile.email)
+    if (byEmail !== null) {
+      // The Google identity is verified for this email, so the existing
+      // GoldRisk account can be securely linked to it rather than duplicated.
+      user = await userRepository.setGoogleId(byEmail.id, profile.googleId)
+    } else {
+      user = await userRepository.createGoogleUser(profile.email, profile.name, profile.googleId)
+    }
   }
 
   const token = signAccessToken({ id: user.id, email: user.email })

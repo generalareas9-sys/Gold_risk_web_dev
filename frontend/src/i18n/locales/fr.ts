@@ -403,8 +403,8 @@ const fr = {
     or: 'ou',
     continueWithGoogle: 'Continuer avec Google',
     signUpWithGoogle: "S'inscrire avec Google",
-    googleUnavailable:
-      "La connexion avec Google n'est pas encore disponible. Utilisez pour l'instant l'e-mail et le mot de passe.",
+googleSignInFailed:
+      "La connexion avec Google a échoué. Réessayez ou utilisez l'e-mail et le mot de passe.",
   },
 
   calcPage: {

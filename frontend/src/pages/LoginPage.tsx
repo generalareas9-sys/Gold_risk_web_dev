@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Input } from '../components/common/Input'
 import { Button } from '../components/common/Button'
 import { PasswordToggle } from '../components/common/PasswordToggle'
@@ -7,6 +7,7 @@ import { GoogleButton } from '../components/common/GoogleButton'
 import { IconMail, IconLock } from '../components/common/Icons'
 import { AuthShell } from '../components/layout/AuthShell'
 import { paths } from '../routes/paths'
+import { getGoogleAuthUrl } from '../services/googleAuth'
 import { useAuth } from '../auth/useAuth'
 import { useLanguage } from '../i18n/useLanguage'
 
@@ -14,14 +15,20 @@ export function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [googleNote, setGoogleNote] = useState(false)
-  const { login, error, clearError } = useAuth()
+  const { login, error, clearError, isAuthenticated, isLoading } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [submitting, setSubmitting] = useState(false)
   const { t, dict } = useLanguage()
 
   const redirectTo = (location.state as { from?: string } | null)?.from ?? paths.calculator
+
+  if (isLoading) {
+    return null
+  }
+  if (isAuthenticated) {
+    return <Navigate to={redirectTo} replace />
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -32,6 +39,13 @@ export function LoginPage() {
     if (ok) {
       navigate(redirectTo, { replace: true })
     }
+  }
+
+  function handleGoogle() {
+    // Full-page navigation to the backend, which redirects to Google's
+    // consent screen and then drops the session token back on the callback
+    // page. The Google client secret never reaches the browser.
+    window.location.assign(getGoogleAuthUrl())
   }
 
   return (
@@ -108,13 +122,9 @@ export function LoginPage() {
         label={t('auth.continueWithGoogle')}
         aria-label={t('auth.continueWithGoogle')}
         disabled={submitting}
-        onClick={() => setGoogleNote(true)}
+        onClick={handleGoogle}
         className="mt-4"
       />
-
-      <div role="status" aria-live="polite" className="mt-2 min-h-5">
-        {googleNote && <p className="text-xs text-text-muted">{t('auth.googleUnavailable')}</p>}
-      </div>
     </AuthShell>
   )
 }

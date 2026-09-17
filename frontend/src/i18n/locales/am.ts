@@ -403,7 +403,7 @@ const am = {
     or: 'ወይም',
     continueWithGoogle: 'በGoogle ቀጥል',
     signUpWithGoogle: 'በGoogle ይመዝገቡ',
-    googleUnavailable: 'የGoogle መግቢያ ገና አይገኝም። ለአሁን ኢሜይል እና የይለፍ ቃል ተጠቀም።',
+    googleSignInFailed: 'የGoogle መግቢያ አልተሳካም። እባክህ እንደገና ሞክር ወይም ኢሜይል እና የይለፍ ቃል ተጠቀም።',
   },
 
   calcPage: {

@@ -403,7 +403,7 @@ const es = {
     or: 'o',
     continueWithGoogle: 'Continuar con Google',
     signUpWithGoogle: 'Regístrate con Google',
-    googleUnavailable: 'El inicio de sesión con Google aún no está disponible. Usa el correo electrónico y la contraseña por ahora.',
+    googleSignInFailed: 'El inicio de sesión con Google falló. Inténtalo de nuevo o usa el correo electrónico y la contraseña.',
   },
 
   calcPage: {

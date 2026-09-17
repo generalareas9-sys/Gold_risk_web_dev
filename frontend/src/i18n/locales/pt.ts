@@ -403,7 +403,7 @@ const pt = {
     or: 'ou',
     continueWithGoogle: 'Continuar com o Google',
     signUpWithGoogle: 'Cadastre-se com o Google',
-    googleUnavailable: 'O login com Google ainda não está disponível. Use e-mail e senha por enquanto.',
+    googleSignInFailed: 'O login com Google falhou. Tente novamente ou use e-mail e senha.',
   },
 
   calcPage: {

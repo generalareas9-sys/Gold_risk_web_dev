@@ -404,7 +404,7 @@ const ar = {
     or: 'أو',
     continueWithGoogle: 'المتابعة باستخدام Google',
     signUpWithGoogle: 'سجّل باستخدام Google',
-    googleUnavailable: 'تسجيل الدخول عبر Google غير متاح بعد. استخدم البريد الإلكتروني وكلمة المرور الآن.',
+    googleSignInFailed: 'فشل تسجيل الدخول عبر Google. حاول مرة أخرى أو استخدم البريد الإلكتروني وكلمة المرور.',
   },
 
   calcPage: {

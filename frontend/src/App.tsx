@@ -13,6 +13,7 @@ import { PrivacyPage } from './pages/PrivacyPage'
 import { TermsPage } from './pages/TermsPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { GoogleCallbackPage } from './pages/GoogleCallbackPage'
 import { CalculatorPage } from './pages/CalculatorPage'
 import { AccountsPage } from './pages/AccountsPage'
 import { HistoryPage } from './pages/HistoryPage'
@@ -35,6 +36,7 @@ function App() {
         <Route path={paths.terms} element={<TermsPage />} />
         <Route path={paths.login} element={<LoginPage />} />
         <Route path={paths.register} element={<RegisterPage />} />
+        <Route path={paths.googleCallback} element={<GoogleCallbackPage />} />
 
         {/* Authenticated-only routes */}
         <Route element={<RequireAuth />}>

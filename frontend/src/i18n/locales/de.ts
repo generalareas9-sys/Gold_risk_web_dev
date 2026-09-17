@@ -403,7 +403,7 @@ const de = {
     or: 'oder',
     continueWithGoogle: 'Mit Google fortfahren',
     signUpWithGoogle: 'Registriere dich mit Google',
-    googleUnavailable: 'Google-Anmeldung ist noch nicht verfügbar. Nutze vorerst E-Mail und Passwort.',
+    googleSignInFailed: 'Google-Anmeldung fehlgeschlagen. Versuche es erneut oder nutze E-Mail und Passwort.',
   },
 
   calcPage: {

@@ -8,11 +8,11 @@ interface GoogleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 /**
  * "Continue with Google" / "Sign up with Google" style button.
  *
- * Deliberately UI-only: Google OAuth is not implemented in the backend yet,
- * so this button never fabricates a session or calls an invented endpoint.
- * It is wired to an explicit note in the calling page, and enters its
- * disabled state while the email/password form is submitting — its styling
- * covers hover, focus, and disabled for light and dark themes alike.
+ * UI-only: the click handler lives in the caller (LoginPage / RegisterPage),
+ * which navigates to the backend's /api/auth/google endpoint for the real
+ * Authorization Code flow. It enters its disabled state while the
+ * email/password form is submitting — its styling covers hover, focus, and
+ * disabled for light and dark themes alike.
  */
 export function GoogleButton({ label, className, ...props }: GoogleButtonProps) {
   return (

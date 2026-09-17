@@ -8,6 +8,9 @@ import { paths } from '../../routes/paths'
  * page content. Seamless translateX(-50%) loop over two identical groups,
  * streams left-to-right in LTR and rightward in RTL, and collapses to a
  * static stacked list when the user prefers reduced motion.
+ *
+ * The two "CTA" cells are real links (React Router <Link> to the register /
+ * login pages) and the whole cell is clickable, not just the trailing label.
  */
 export function AnnouncementMarquee() {
   const { t } = useLanguage()
@@ -19,24 +22,24 @@ export function AnnouncementMarquee() {
     <span key="tagline" className="marquee-item">
       {t('marquee.tagline')}
     </span>,
-    <span key="new-user" className="marquee-cta">
+    <Link key="new-user" to={paths.register} className="marquee-cta">
       <span className="marquee-item">{t('marquee.newUsers')}</span>
-      <Link to={paths.register} className="marquee-link">
+      <span className="marquee-link">
         {t('auth.createAccount')}
         <span className="arrow-flip" aria-hidden="true">
           →
         </span>
-      </Link>
-    </span>,
-    <span key="existing-user" className="marquee-cta">
+      </span>
+    </Link>,
+    <Link key="existing-user" to={paths.login} className="marquee-cta">
       <span className="marquee-item">{t('marquee.existingUsers')}</span>
-      <Link to={paths.login} className="marquee-link">
+      <span className="marquee-link">
         {t('navigation.login')}
         <span className="arrow-flip" aria-hidden="true">
           →
         </span>
-      </Link>
-    </span>,
+      </span>
+    </Link>,
     <span key="slogan" className="marquee-item">
       {t('marquee.slogan')}
     </span>,

@@ -16,6 +16,10 @@ import {
   PostgresCalculationsRepository,
   type CalculationRepository,
 } from './db/calculationsRepository.ts'
+import {
+  createGoogleProvider,
+  type GoogleProviderService,
+} from './auth/googleService.ts'
 import { errorHandler } from './middleware/errorHandler.ts'
 import { notFoundHandler } from './middleware/notFoundHandler.ts'
 import { createApiRouter } from './routes/index.ts'
@@ -26,6 +30,8 @@ export interface AppDependencies {
   accountsRepository?: AccountRepository
   specificationsRepository?: SpecificationRepository
   calculationsRepository?: CalculationRepository
+  /** Google OAuth provider; defaults to a configured real implementation. */
+  googleProvider?: GoogleProviderService | null
 }
 
 /**
@@ -46,6 +52,16 @@ export function createApp(dependencies: AppDependencies = {}) {
     dependencies.specificationsRepository ?? new PostgresSpecificationsRepository(pool)
   const calculationsRepository =
     dependencies.calculationsRepository ?? new PostgresCalculationsRepository(pool)
+  const googleProvider: GoogleProviderService | null =
+    dependencies.googleProvider !== undefined
+      ? dependencies.googleProvider
+      : config.google.clientId !== null && config.google.clientSecret !== null
+        ? createGoogleProvider({
+            clientId: config.google.clientId,
+            clientSecret: config.google.clientSecret,
+            callbackUrl: config.google.callbackUrl ?? '',
+          })
+        : null
 
   app.disable('x-powered-by')
 
@@ -64,13 +80,16 @@ export function createApp(dependencies: AppDependencies = {}) {
 
   app.use(
     '/api',
-    createApiRouter(
+    createApiRouter({
       userRepository,
       tokenStore,
       accountsRepository,
       specificationsRepository,
       calculationsRepository,
-    ),
+      googleProvider,
+      jwtSecret: config.jwt.secret ?? '',
+      frontendUrl: config.frontendUrl,
+    }),
   )
 
   app.use(notFoundHandler)

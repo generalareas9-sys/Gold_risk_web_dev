@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Navigate, NavLink, useNavigate } from 'react-router-dom'
 import { Input } from '../components/common/Input'
 import { Button } from '../components/common/Button'
 import { PasswordToggle } from '../components/common/PasswordToggle'
@@ -7,6 +7,7 @@ import { GoogleButton } from '../components/common/GoogleButton'
 import { IconMail, IconLock, IconUser } from '../components/common/Icons'
 import { AuthShell } from '../components/layout/AuthShell'
 import { paths } from '../routes/paths'
+import { getGoogleAuthUrl } from '../services/googleAuth'
 import { useAuth } from '../auth/useAuth'
 import { useLanguage } from '../i18n/useLanguage'
 
@@ -17,12 +18,18 @@ export function RegisterPage() {
   const [confirm, setConfirm] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-  const [googleNote, setGoogleNote] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
-  const { register, error: apiError, clearError } = useAuth()
+  const { register, error: apiError, clearError, isAuthenticated, isLoading } = useAuth()
   const navigate = useNavigate()
   const [submitting, setSubmitting] = useState(false)
   const { t, dict } = useLanguage()
+
+  if (isLoading) {
+    return null
+  }
+  if (isAuthenticated) {
+    return <Navigate to={paths.calculator} replace />
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -48,6 +55,13 @@ export function RegisterPage() {
     if (ok) {
       navigate(paths.calculator, { replace: true })
     }
+  }
+
+  function handleGoogle() {
+    // Full-page navigation to the backend, which redirects to Google's
+    // consent screen and then drops the session token back on the callback
+    // page. The Google client secret never reaches the browser.
+    window.location.assign(getGoogleAuthUrl())
   }
 
   const displayError = formError ?? apiError
@@ -154,13 +168,9 @@ export function RegisterPage() {
         label={t('auth.signUpWithGoogle')}
         aria-label={t('auth.signUpWithGoogle')}
         disabled={submitting}
-        onClick={() => setGoogleNote(true)}
+        onClick={handleGoogle}
         className="mt-4"
       />
-
-      <div role="status" aria-live="polite" className="mt-2 min-h-5">
-        {googleNote && <p className="text-xs text-text-muted">{t('auth.googleUnavailable')}</p>}
-      </div>
     </AuthShell>
   )
 }
