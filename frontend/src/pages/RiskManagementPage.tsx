@@ -1,53 +1,54 @@
-import { Link } from 'react-router-dom'
 import { Section } from '../components/layout/Section'
-import { Card } from '../components/common/Card'
+import { PageHero } from '../components/common/PageHero'
+import { IconBadge } from '../components/common/IconBadge'
+import { Callout } from '../components/common/Callout'
+import { CtaPanel } from '../components/common/CtaPanel'
+import {
+  IconTarget,
+  IconStop,
+  IconScale,
+  IconShield,
+} from '../components/common/Icons'
 import { paths } from '../routes/paths'
 import { useLanguage } from '../i18n/useLanguage'
+
+const principleIcons = [IconTarget, IconStop, IconScale, IconShield]
+const principleTones = ['gold', 'info', 'teal', 'neutral'] as const
 
 export function RiskManagementPage() {
   const { t, dict } = useLanguage()
 
   return (
     <>
-      <Section className="border-b border-border pb-10 pt-14 sm:pt-16">
-        <div className="max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-wider text-gold">
-            {t('risk.eyebrow')}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold text-text sm:text-4xl">{t('risk.title')}</h1>
-          <p className="mt-4 text-base leading-relaxed text-text-muted">{t('risk.intro')}</p>
-        </div>
-      </Section>
+      <PageHero eyebrow={t('risk.eyebrow')} title={t('risk.title')} intro={t('risk.intro')} />
 
-      <Section className="pt-10">
-        <div className="max-w-3xl">
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {dict.risk.principles.map((principle) => (
-              <li key={principle.title}>
-                <Card className="h-full px-5 py-4">
-                  <h2 className="text-base font-semibold text-text">{principle.title}</h2>
-                  <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{principle.body}</p>
-                </Card>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-10 rounded-md border border-warning bg-warning-muted px-5 py-4">
-            <p className="text-sm leading-relaxed text-text-muted">{t('risk.disclaimer')}</p>
-          </div>
-
-          <Card className="bg-surface-raised mt-10 flex flex-col gap-3 px-6 py-8 text-center sm:flex-row sm:items-center sm:justify-center sm:gap-4 sm:text-start">
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold text-text">{t('risk.ctaTitle')}</h2>
-              <p className="mt-1 text-sm text-text-muted">{t('risk.ctaBody')}</p>
-            </div>
-            <Link
-              to={paths.login}
-              className="inline-flex items-center justify-center rounded bg-gold px-6 py-3 text-sm font-medium text-on-gold transition-colors duration-200 hover:bg-gold-strong"
+      <Section className="band border-b border-border">
+        <div className="grid gap-5 sm:grid-cols-2">
+          {dict.risk.principles.map((principle, index) => (
+            <div
+              key={principle.title}
+              className="lift rounded-2xl border border-border bg-surface p-6"
             >
-              {t('risk.ctaButton')}
-            </Link>
-          </Card>
+              <IconBadge icon={principleIcons[index]} tone={principleTones[index]} />
+              <h2 className="mt-5 text-base font-semibold text-text">{principle.title}</h2>
+              <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{principle.body}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mx-auto mt-10 max-w-3xl">
+          <Callout tone="warning" title={t('risk.title')}>
+            {t('risk.disclaimer')}
+          </Callout>
+        </div>
+
+        <div className="mx-auto mt-12 max-w-3xl">
+          <CtaPanel
+            title={t('risk.ctaTitle')}
+            body={t('risk.ctaBody')}
+            primary={{ to: paths.login, label: t('risk.ctaButton') }}
+            secondary={{ to: paths.positionSizeCalculator, label: dict.psc.title }}
+          />
         </div>
       </Section>
     </>

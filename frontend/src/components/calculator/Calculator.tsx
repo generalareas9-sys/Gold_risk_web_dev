@@ -146,7 +146,7 @@ export function Calculator() {
         : account.currency
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="lift overflow-hidden">
       <div className="grid lg:grid-cols-[1.3fr_1fr]">
         <form
           onSubmit={onSubmit}
@@ -193,7 +193,7 @@ export function Calculator() {
           </div>
 
           {showAdvanced && (
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 rounded-md border border-border bg-bg px-4 py-3 text-xs text-text-muted sm:grid-cols-4">
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 rounded-xl border border-border bg-bg px-4 py-3 text-xs text-text-muted sm:grid-cols-4">
               <div>
                 <dt className="text-text-faint">{t('calc.symbol')}</dt>
                 <dd className="mt-0.5 font-mono text-text">{account.symbol}</dd>
@@ -298,7 +298,7 @@ export function Calculator() {
           />
 
           {calc.formErrors.length > 0 && (
-            <div role="alert" className="rounded-md border border-error bg-error-muted px-4 py-3">
+            <div role="alert" className="rounded-xl border border-error bg-error-muted px-4 py-3">
               <p className="text-sm font-medium text-text">{t('calc.checkInputs')}</p>
               <ul className="mt-1 list-inside list-disc text-sm text-text-muted">
                 {calc.formErrors.map((message) => (
@@ -309,7 +309,7 @@ export function Calculator() {
           )}
 
           {calc.result != null && !calc.result.valid && (
-            <div role="alert" className="rounded-md border border-error bg-error-muted px-4 py-3">
+            <div role="alert" className="rounded-xl border border-error bg-error-muted px-4 py-3">
               <p className="text-sm font-medium text-text">{t('calc.fixSetup')}</p>
               <ul className="mt-1 list-inside list-disc text-sm text-text-muted">
                 {calc.result.errors.map((message) => (

@@ -1,25 +1,21 @@
 import type { ReactNode } from 'react'
-import { Section } from '../components/layout/Section'
+import { PageHero } from '../components/common/PageHero'
 
 interface PlaceholderPageProps {
+  eyebrow?: string
   title: string
   description: string
   children?: ReactNode
 }
 
-/**
- * Consistent shell for the informational pages defined in this phase.
- * Pages pass their own copy; this only standardizes spacing and heading
- * structure so content pages don't each reinvent the layout.
- */
-export function PlaceholderPage({ title, description, children }: PlaceholderPageProps) {
+export function PlaceholderPage({ eyebrow, title, description, children }: PlaceholderPageProps) {
   return (
-    <Section className="pt-14 sm:pt-16">
-      <div className="max-w-2xl">
-        <h1 className="text-3xl font-semibold text-text sm:text-4xl">{title}</h1>
-        <p className="mt-4 text-base text-text-muted">{description}</p>
-      </div>
-      {children && <div className="mt-10 max-w-2xl">{children}</div>}
-    </Section>
+    <PageHero eyebrow={eyebrow} title={title} intro={description}>
+      {children && (
+        <div className="surface-panel max-w-3xl rounded-2xl border border-border p-6 shadow-lg shadow-card-shadow">
+          {children}
+        </div>
+      )}
+    </PageHero>
   )
 }

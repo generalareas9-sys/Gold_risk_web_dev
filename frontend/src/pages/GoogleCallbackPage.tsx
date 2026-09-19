@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { Card } from '../components/common/Card'
+import { Link, useNavigate } from 'react-router-dom'
 import { Logo } from '../components/common/Logo'
+import { Button } from '../components/common/Button'
+import { Loading } from '../components/common/Loading'
+import { IconAlert } from '../components/common/Icons'
 import { PageContainer } from '../components/layout/PageContainer'
 import { parseGoogleCallbackHash } from '../auth/googleCallback'
 import { applySessionForToken } from '../auth/applySession'
@@ -51,30 +53,44 @@ export function GoogleCallbackPage() {
   }, [applySession, navigate, parsed])
 
   return (
-    <PageContainer className="grid min-h-[calc(100vh-6rem)] place-items-center py-14">
-      <Card className="w-full max-w-sm p-8">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <Logo className="h-10" />
-          {error !== null ? (
-            <>
-              <h1 className="text-lg font-semibold text-text">
-                {t('auth.googleSignInFailed')}
-              </h1>
-              <p className="text-sm leading-relaxed text-text-muted" role="alert">
-                {error}
-              </p>
-              <NavLink
-                to={paths.login}
-                className="rounded-lg bg-gold px-4 py-2 text-sm font-medium text-on-gold transition-colors hover:bg-gold-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
-              >
-                {t('navigation.login')}
-              </NavLink>
-            </>
-          ) : (
-            <p className="text-sm text-text-muted">{t('common.loading')}…</p>
-          )}
+    <div className="relative overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 pattern-grid-fade opacity-60" />
+        <div className="absolute -top-28 end-[14%] h-96 w-96 rounded-full bg-[radial-gradient(closest-side,var(--color-hero-glow),transparent)] blur-2xl" />
+        <div className="absolute -bottom-16 start-[-8%] h-80 w-80 rounded-full bg-[radial-gradient(closest-side,var(--color-glow-soft),transparent)] blur-2xl" />
+      </div>
+
+      <PageContainer className="relative grid min-h-[calc(100vh-6rem)] place-items-center py-14">
+        <div className="surface-panel relative w-full max-w-sm overflow-hidden rounded-3xl border border-border p-8 shadow-2xl shadow-card-shadow">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"
+          />
+          <div className="relative flex flex-col items-center gap-4 text-center">
+            <Logo className="h-10" />
+            {error !== null ? (
+              <>
+                <span className="mt-2 flex h-11 w-11 items-center justify-center rounded-full border border-error/30 bg-error/10 text-error">
+                  <IconAlert aria-hidden="true" className="h-5 w-5" />
+                </span>
+                <h1 className="text-lg font-semibold text-text">
+                  {t('auth.googleSignInFailed')}
+                </h1>
+                <p className="text-sm leading-relaxed text-text-muted" role="alert">
+                  {error}
+                </p>
+                <Link to={paths.login} className="mt-2 inline-flex">
+                  <Button size="md">{t('navigation.login')}</Button>
+                </Link>
+              </>
+            ) : (
+              <div className="py-4">
+                <Loading />
+              </div>
+            )}
+          </div>
         </div>
-      </Card>
-    </PageContainer>
+      </PageContainer>
+    </div>
   )
 }

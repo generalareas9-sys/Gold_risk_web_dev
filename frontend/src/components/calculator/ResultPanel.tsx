@@ -51,14 +51,29 @@ interface MetricTileProps {
 }
 
 function MetricTile({ label, value, tone = 'default', className }: MetricTileProps) {
+  const toneClasses: Record<MetricTone, string> = {
+    default: 'border-border bg-surface',
+    gold: 'border-gold/25 bg-gold/5',
+    success: 'border-success/25 bg-success/5',
+  }
+  const accent: Record<MetricTone, string> = {
+    default: 'bg-border-strong',
+    gold: 'bg-gold/50',
+    success: 'bg-success/50',
+  }
   return (
     <div
       className={cn(
-        'flex min-w-0 flex-col gap-1 rounded-xl border border-border bg-surface px-4 py-3',
+        'relative flex min-w-0 flex-col gap-1 overflow-hidden rounded-xl border px-4 py-3',
+        toneClasses[tone],
         className,
       )}
     >
-      <dt className="truncate text-xs text-text-faint">{label}</dt>
+      <span
+        aria-hidden="true"
+        className={cn('absolute inset-x-0 top-0 h-px', accent[tone])}
+      />
+      <dt className="truncate text-[0.6875rem] uppercase tracking-wider text-text-faint">{label}</dt>
       <dd
         className={cn(
           'truncate font-mono text-sm',
@@ -170,7 +185,7 @@ export function ResultPanel({ account, result, onCopyLot }: ResultPanelProps) {
       )}
 
       {result != null && result.warnings.length > 0 && (
-        <div className="relative flex flex-col gap-2 rounded-md border border-warning bg-warning-muted px-4 py-3">
+        <div className="relative flex flex-col gap-2 rounded-xl border border-warning bg-warning-muted px-4 py-3">
           {warnings.map((warning) => (
             <p key={warning} className="text-xs leading-relaxed text-text-muted">
               {warning}

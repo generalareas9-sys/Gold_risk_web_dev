@@ -10,7 +10,10 @@ import { config } from '../config/env.ts'
  * with a readable message if no connection string is configured.
  */
 export const pool: Pool | null = config.database.connectionString
-  ? new Pool({ connectionString: config.database.connectionString })
+  ? new Pool({
+      connectionString: config.database.connectionString,
+      ssl: config.database.ssl,
+    })
   : null
 
 export function getRequiredPool(): Pool {

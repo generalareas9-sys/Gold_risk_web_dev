@@ -96,7 +96,10 @@ export function LoginPage() {
         />
 
         {error !== null && (
-          <div role="alert" className="rounded-md border border-error bg-error-muted px-4 py-3">
+          <div
+            role="alert"
+            className="rounded-xl border border-error/40 bg-error-muted px-4 py-3"
+          >
             <p className="text-sm text-text-muted">{error}</p>
           </div>
         )}

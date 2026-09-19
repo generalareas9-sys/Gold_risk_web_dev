@@ -39,9 +39,10 @@ export function Input({
           aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
           aria-invalid={Boolean(errorMessage)}
           className={cn(
-            'rounded border bg-surface px-3.5 py-2.5 font-mono text-sm text-text placeholder:text-text-faint placeholder:font-sans',
-            'focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2',
-            errorMessage ? 'border-error' : 'border-border-strong',
+            'rounded-xl border bg-surface px-3.5 py-2.5 font-mono text-sm text-text transition-colors duration-150',
+            'placeholder:text-text-faint placeholder:font-sans',
+            'focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring',
+            errorMessage ? 'border-error' : 'border-border-strong hover:border-gold/40',
             'disabled:cursor-not-allowed disabled:opacity-50',
             startSlot ? 'ps-11' : undefined,
             endSlot ? 'pe-11' : undefined,

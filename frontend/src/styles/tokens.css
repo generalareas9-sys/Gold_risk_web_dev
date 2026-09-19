@@ -48,6 +48,18 @@
   --color-warning: #d9a441;
   --color-warning-muted: #35290f;
 
+  /*
+   * Coordinated support hues. Gold is the signature accent, but the palette
+   * is deliberately multi-hue: a deep brand navy plus cool blue (info/data)
+   * and teal (analytics/live) so charts, technical labels and status states
+   * never fall back to plain black-and-gold.
+   */
+  --color-navy: #0a1120;
+  --color-info: #4c8dff;
+  --color-info-muted: #16233c;
+  --color-teal: #2fb8a6;
+  --color-teal-muted: #0f312d;
+
   /* Focus ring */
   --color-focus-ring: #d6b34a;
 
@@ -77,6 +89,22 @@
   --color-brand-glow: rgba(88, 150, 255, 0.22);
   --color-brand-glow-strong: rgba(125, 180, 255, 0.5);
   --color-brand-hover-text: #d7e6ff;
+
+  /* ===== Decorative pattern + data-viz palette (dark) ===== */
+  --color-grid-line: rgba(148, 163, 184, 0.09);
+  --color-grid-line-strong: rgba(148, 163, 184, 0.16);
+  --color-dot: rgba(148, 163, 184, 0.16);
+  --color-chart-line: #5b8def;
+  --color-chart-line-soft: rgba(91, 141, 239, 0.4);
+  --color-chart-fill: rgba(91, 141, 239, 0.16);
+  --color-chart-gold: rgba(214, 179, 74, 0.55);
+  --color-chart-grid: rgba(148, 163, 184, 0.12);
+
+  /* ===== Surface treatments + gradients (dark) ===== */
+  --gradient-gold: linear-gradient(135deg, #e0c161 0%, #c9a227 52%, #8c7427 100%);
+  --gradient-panel: linear-gradient(158deg, rgba(30, 38, 50, 0.92) 0%, rgba(13, 17, 23, 0.72) 100%);
+  --gradient-hero: linear-gradient(180deg, rgba(10, 17, 32, 0) 0%, rgba(10, 17, 32, 0.55) 100%);
+  --gradient-sheen: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
 }
 
 [data-theme="light"] {
@@ -113,6 +141,13 @@
   --color-warning: #a5771f;
   --color-warning-muted: #f8efd9;
 
+  /* Coordinated support hues — a deeper, calmer blue/teal tuned for ivory. */
+  --color-navy: #0d1420;
+  --color-info: #2563eb;
+  --color-info-muted: #e5edfb;
+  --color-teal: #0f8f7d;
+  --color-teal-muted: #dff3ee;
+
   /* Focus ring */
   --color-focus-ring: #a9822b;
 
@@ -142,4 +177,20 @@
   --color-brand-glow: rgba(41, 101, 235, 0.16);
   --color-brand-glow-strong: rgba(29, 78, 216, 0.38);
   --color-brand-hover-text: #1d4ed8;
+
+  /* ===== Decorative pattern + data-viz palette (light) ===== */
+  --color-grid-line: rgba(26, 32, 41, 0.06);
+  --color-grid-line-strong: rgba(26, 32, 41, 0.1);
+  --color-dot: rgba(26, 32, 41, 0.12);
+  --color-chart-line: #2563eb;
+  --color-chart-line-soft: rgba(37, 99, 235, 0.36);
+  --color-chart-fill: rgba(37, 99, 235, 0.12);
+  --color-chart-gold: rgba(169, 130, 43, 0.5);
+  --color-chart-grid: rgba(26, 32, 41, 0.09);
+
+  /* ===== Surface treatments + gradients (light) ===== */
+  --gradient-gold: linear-gradient(135deg, #c9a23f 0%, #a9822b 52%, #7c5f1a 100%);
+  --gradient-panel: linear-gradient(158deg, #ffffff 0%, #f3eee2 100%);
+  --gradient-hero: linear-gradient(180deg, rgba(247, 244, 237, 0) 0%, rgba(247, 244, 237, 0.6) 100%);
+  --gradient-sheen: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
 }

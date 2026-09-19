@@ -120,10 +120,54 @@ function parseJwtExpiresIn(value: string | undefined): JwtExpiresIn {
   return trimmed as JwtExpiresIn
 }
 
+/**
+ * Parses a boolean environment flag. Accepts the common true/false spellings
+ * (`true`, `1`, `yes`, `on` and the inverses). An unrecognized value is a hard
+ * startup failure rather than a silent fallback.
+ */
+function parseBoolean(value: string | undefined, name: string, fallback: boolean): boolean {
+  if (value === undefined || value.trim() === '') {
+    return fallback
+  }
+  const normalized = value.trim().toLowerCase()
+  if (['true', '1', 'yes', 'on'].includes(normalized)) {
+    return true
+  }
+  if (['false', '0', 'no', 'off'].includes(normalized)) {
+    return false
+  }
+  throw new Error(`${name} must be a boolean (true/false). Received: "${String(value)}".`)
+}
+
+/**
+ * PostgreSQL TLS is opt-in and never silently weakened:
+ *
+ *   * `DATABASE_SSL` — `false` by default so local, non-TLS PostgreSQL keeps
+ *     working. Set to `true` for a managed provider that requires TLS.
+ *   * `DATABASE_SSL_REJECT_UNAUTHORIZED` — `true` by default, so the server
+ *     certificate is validated. Only set it to `false` for a provider that
+ *     presents a self-signed certificate, and only knowingly.
+ */
+function parseDatabaseSsl(): false | { rejectUnauthorized: boolean } {
+  const enabled = parseBoolean(process.env.DATABASE_SSL, 'DATABASE_SSL', false)
+  if (!enabled) {
+    return false
+  }
+  return {
+    rejectUnauthorized: parseBoolean(
+      process.env.DATABASE_SSL_REJECT_UNAUTHORIZED,
+      'DATABASE_SSL_REJECT_UNAUTHORIZED',
+      true,
+    ),
+  }
+}
+
 const nodeEnv = parseNodeEnv(process.env.NODE_ENV)
 const port = parsePort(process.env.PORT)
 const corsOrigins = parseCorsOrigins(process.env.CORS_ORIGIN)
 const databaseConnectionString = parseDatabaseUrl(process.env.DATABASE_URL)
+const databaseSsl = parseDatabaseSsl()
+
 const jwtSecret = parseJwtSecret(process.env.JWT_SECRET)
 const jwtExpiresIn = parseJwtExpiresIn(process.env.JWT_EXPIRES_IN)
 const googleClientId = parseOptional(process.env.GOOGLE_CLIENT_ID)
@@ -146,6 +190,7 @@ export const config = {
   frontendUrl,
   database: {
     connectionString: databaseConnectionString,
+    ssl: databaseSsl,
   },
   jwt: {
     secret: jwtSecret,

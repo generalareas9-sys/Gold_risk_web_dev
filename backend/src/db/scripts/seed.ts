@@ -58,6 +58,9 @@ const SEED: DevSeed = {
 }
 
 async function main(): Promise<void> {
+  if (config.isProduction) {
+    throw new Error('db:seed is a development command and refuses to run in production.')
+  }
   if (config.database.connectionString === null) {
     throw new Error(
       'DATABASE_URL is not configured. Set DATABASE_URL in the backend `.env` ' +
@@ -65,7 +68,10 @@ async function main(): Promise<void> {
     )
   }
 
-  const client = new Client({ connectionString: config.database.connectionString })
+  const client = new Client({
+    connectionString: config.database.connectionString,
+    ssl: config.database.ssl,
+  })
   await client.connect()
   try {
     for (const table of TABLES_TO_CHECK) {

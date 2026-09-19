@@ -4,6 +4,8 @@ import { PageContainer } from '../components/layout/PageContainer'
 import { Card } from '../components/common/Card'
 import { Button } from '../components/common/Button'
 import { Input } from '../components/common/Input'
+import { WorkspaceHeader } from '../components/common/WorkspaceHeader'
+import { StatePanel } from '../components/common/StatePanel'
 import { useAuth } from '../auth/useAuth'
 import { formatNumber, formatDate } from '../utils/format'
 import { cn } from '../utils/cn'
@@ -127,7 +129,7 @@ function AccountForm({
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-col gap-4 rounded-md border border-border bg-surface px-5 py-5 sm:px-6"
+      className="flex flex-col gap-4 rounded-2xl border border-border bg-surface px-5 py-5 shadow-sm shadow-card-shadow sm:px-6"
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <Input
@@ -254,7 +256,7 @@ function SpecificationForm({
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-col gap-4 rounded-md border border-border bg-bg px-5 py-4"
+      className="flex flex-col gap-4 rounded-2xl border border-border bg-bg px-5 py-4"
     >
       <div className="grid gap-4 sm:grid-cols-5">
         <Input
@@ -445,7 +447,7 @@ function SpecificationsSection({
           {specifications.map((spec) => (
             <div
               key={spec.id}
-              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-md border border-border bg-surface-raised px-4 py-3"
+              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-xl border border-border bg-surface-raised px-4 py-3"
             >
               <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-text-muted">
                 <span className="font-mono text-sm font-medium text-text">{spec.symbol}</span>
@@ -552,25 +554,40 @@ function AccountCard({
   }
 
   return (
-    <Card className="overflow-hidden">
-      <div className="px-5 py-4 sm:px-6">
+    <Card className="relative overflow-hidden">
+      <span
+        aria-hidden="true"
+        className={cn(
+          'absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent to-transparent',
+          account.isDefault ? 'via-gold/60' : 'via-border-strong',
+        )}
+      />
+      <div className="px-5 py-5 sm:px-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-base font-semibold text-text">{account.accountName}</h3>
               {account.isDefault && (
-                <span className="rounded-full border border-gold px-2.5 py-0.5 text-xs text-gold">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2.5 py-0.5 text-xs font-medium text-gold">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />
                   {t('accounts.default')}
                 </span>
               )}
               <span
                 className={cn(
-                  'rounded-full border px-2.5 py-0.5 text-xs',
+                  'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium',
                   account.isActive
-                    ? 'border-border-strong text-text-muted'
-                    : 'border-error text-error',
+                    ? 'border-teal/30 bg-teal/10 text-teal'
+                    : 'border-error/30 bg-error/10 text-error',
                 )}
               >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'h-1.5 w-1.5 rounded-full',
+                    account.isActive ? 'bg-teal' : 'bg-error',
+                  )}
+                />
                 {account.isActive ? t('accounts.active') : t('accounts.inactive')}
               </span>
             </div>
@@ -603,26 +620,34 @@ function AccountCard({
           </div>
         </div>
 
-        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-text-muted sm:grid-cols-4">
-          <div>
-            <dt className="text-text-faint">{t('accounts.balance')}</dt>
-            <dd className="mt-0.5 font-mono text-sm text-text">
+        <dl className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-xl border border-border bg-bg px-3 py-2">
+            <dt className="text-[0.6875rem] uppercase tracking-wider text-text-faint">
+              {t('accounts.balance')}
+            </dt>
+            <dd className="stat-value mt-1 text-sm font-semibold text-text">
               {formatNumber(account.balance, 2)} {account.currency}
             </dd>
           </div>
-          <div>
-            <dt className="text-text-faint">{t('accounts.usdConversion')}</dt>
-            <dd className="mt-0.5 font-mono text-sm text-text">
+          <div className="rounded-xl border border-border bg-bg px-3 py-2">
+            <dt className="text-[0.6875rem] uppercase tracking-wider text-text-faint">
+              {t('accounts.usdConversion')}
+            </dt>
+            <dd className="stat-value mt-1 text-sm text-text">
               {t('accounts.usdConversionValue', { value: account.usdConversion })}
             </dd>
           </div>
-          <div>
-            <dt className="text-text-faint">{t('accounts.currency')}</dt>
-            <dd className="mt-0.5 font-mono text-sm text-text">{account.currency}</dd>
+          <div className="rounded-xl border border-border bg-bg px-3 py-2">
+            <dt className="text-[0.6875rem] uppercase tracking-wider text-text-faint">
+              {t('accounts.currency')}
+            </dt>
+            <dd className="stat-value mt-1 text-sm text-text">{account.currency}</dd>
           </div>
-          <div>
-            <dt className="text-text-faint">{t('accounts.created')}</dt>
-            <dd className="mt-0.5 font-mono text-sm text-text">{formatDate(account.createdAt)}</dd>
+          <div className="rounded-xl border border-border bg-bg px-3 py-2">
+            <dt className="text-[0.6875rem] uppercase tracking-wider text-text-faint">
+              {t('accounts.created')}
+            </dt>
+            <dd className="stat-value mt-1 text-sm text-text">{formatDate(account.createdAt)}</dd>
           </div>
         </dl>
 
@@ -733,60 +758,58 @@ export function AccountsPage() {
 
   const activeForm = editingAccount !== null || showCreateForm
 
+  const subtitle =
+    accounts.length === 0
+      ? t('accounts.subtitleEmpty')
+      : t(accounts.length === 1 ? 'accounts.subtitleOne' : 'accounts.subtitleMany', {
+          count: accounts.length,
+        })
+
   return (
-    <Section className="pt-14 sm:pt-16">
+    <Section className="pt-10 sm:pt-12">
       <PageContainer>
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-semibold text-text sm:text-4xl">{t('accounts.title')}</h1>
-            <p className="mt-2 text-base text-text-muted">
-              {accounts.length === 0
-                ? t('accounts.subtitleEmpty')
-                : t(
-                    accounts.length === 1 ? 'accounts.subtitleOne' : 'accounts.subtitleMany',
-                    { count: accounts.length },
-                  )}
-            </p>
-          </div>
-          {!activeForm && (
-            <Button type="button" variant="secondary" onClick={startCreate}>
-              {t('accounts.newAccount')}
-            </Button>
-          )}
-        </div>
+        <WorkspaceHeader
+          eyebrow={t('navigation.accounts')}
+          title={t('accounts.title')}
+          subtitle={subtitle}
+          action={
+            !activeForm ? (
+              <Button type="button" variant="secondary" onClick={startCreate}>
+                {t('accounts.newAccount')}
+              </Button>
+            ) : undefined
+          }
+        />
 
         {error && (
-          <div role="alert" className="mt-6 rounded-md border border-error bg-error-muted px-4 py-3">
-            <p className="text-sm font-medium text-text">{t('accounts.unableToLoad')}</p>
-            <p className="mt-1 text-sm text-text-muted">{error}</p>
-            <Button type="button" variant="secondary" size="sm" className="mt-3" onClick={refresh}>
-              {t('accounts.retry')}
-            </Button>
-          </div>
+          <StatePanel
+            variant="error"
+            className="mt-6"
+            title={t('accounts.unableToLoad')}
+            body={error}
+            action={
+              <Button type="button" variant="secondary" size="sm" onClick={refresh}>
+                {t('accounts.retry')}
+              </Button>
+            }
+          />
         )}
 
         {loading ? (
-          <div role="status" className="mt-8 flex items-center gap-3 text-text-muted">
-            <span
-              aria-hidden="true"
-              className="h-4 w-4 animate-spin rounded-full border-2 border-border-strong border-t-gold"
-            />
-            <span className="text-sm">{t('accounts.loading')}</span>
-          </div>
+          <StatePanel variant="loading" className="mt-8" title={t('accounts.loading')} />
         ) : (
           <div className="mt-8 flex flex-col gap-6">
             {accounts.length === 0 && !activeForm && (
-              <Card className="px-6 py-10 text-center">
-                <h3 className="text-base font-semibold text-text">{t('accounts.emptyTitle')}</h3>
-                <p className="mt-2 text-sm text-text-muted">{t('accounts.emptyBody')}</p>
-                <Button
-                  type="button"
-                  className="mt-5"
-                  onClick={startCreate}
-                >
-                  {t('accounts.createAccount')}
-                </Button>
-              </Card>
+              <StatePanel
+                variant="empty"
+                title={t('accounts.emptyTitle')}
+                body={t('accounts.emptyBody')}
+                action={
+                  <Button type="button" onClick={startCreate}>
+                    {t('accounts.createAccount')}
+                  </Button>
+                }
+              />
             )}
 
             {showCreateForm && (

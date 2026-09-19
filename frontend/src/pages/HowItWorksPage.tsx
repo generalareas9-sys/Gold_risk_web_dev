@@ -1,39 +1,47 @@
-import { Link } from 'react-router-dom'
 import { Section } from '../components/layout/Section'
-import { Card } from '../components/common/Card'
+import { PageHero } from '../components/common/PageHero'
+import { IconBadge } from '../components/common/IconBadge'
+import { CtaPanel } from '../components/common/CtaPanel'
+import {
+  IconWallet,
+  IconPercent,
+  IconTarget,
+  IconCalculator,
+  IconCheck,
+} from '../components/common/Icons'
 import { paths } from '../routes/paths'
 import { useLanguage } from '../i18n/useLanguage'
+
+const stepIcons = [IconWallet, IconPercent, IconTarget, IconCalculator, IconCheck]
+const stepTones = ['gold', 'info', 'teal', 'gold', 'info'] as const
 
 export function HowItWorksPage() {
   const { t, dict } = useLanguage()
 
   return (
     <>
-      <Section className="border-b border-border pb-10 pt-14 sm:pt-16">
-        <div className="max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-wider text-gold">
-            {t('hiw.eyebrow')}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold text-text sm:text-4xl">{t('hiw.title')}</h1>
-          <p className="mt-4 text-base leading-relaxed text-text-muted">{t('hiw.intro')}</p>
-        </div>
-      </Section>
+      <PageHero eyebrow={t('hiw.eyebrow')} title={t('hiw.title')} intro={t('hiw.intro')} />
 
-      <Section className="pt-10">
-        <div className="max-w-2xl">
+      <Section className="relative pt-12">
+        <div className="mx-auto max-w-3xl">
           <div className="relative">
             <span
               aria-hidden="true"
-              className="absolute bottom-6 start-5 top-3 w-px bg-gradient-to-b from-gold/40 via-border-strong to-transparent"
+              className="absolute bottom-8 start-6 top-4 w-px bg-gradient-to-b from-gold/50 via-border-strong to-transparent"
             />
             <ol className="relative flex flex-col gap-8">
               {dict.hiw.steps.map((step, index) => (
-                <li key={step.title} className="relative flex gap-4">
-                  <span className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-strong bg-bg font-mono text-base text-gold">
-                    {index + 1}
-                  </span>
+                <li key={step.title} className="relative flex gap-5">
+                  <div className="relative z-10">
+                    <IconBadge icon={stepIcons[index]} tone={stepTones[index]} />
+                  </div>
                   <div className="pt-1">
-                    <h2 className="text-lg font-semibold text-text">{step.title}</h2>
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-xs text-text-faint">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <h2 className="text-lg font-semibold text-text">{step.title}</h2>
+                    </div>
                     <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{step.body}</p>
                   </div>
                 </li>
@@ -41,18 +49,13 @@ export function HowItWorksPage() {
             </ol>
           </div>
 
-          <Card className="bg-surface-raised mt-12 flex flex-col gap-3 px-6 py-8 text-center sm:flex-row sm:items-center sm:justify-center sm:gap-4 sm:text-start">
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold text-text">{t('hiw.ctaTitle')}</h2>
-              <p className="mt-1 text-sm text-text-muted">{t('hiw.ctaBody')}</p>
-            </div>
-            <Link
-              to={paths.positionSizeCalculator}
-              className="inline-flex items-center justify-center rounded border border-border-strong px-6 py-3 text-sm font-medium text-text-muted transition-colors duration-200 hover:border-gold hover:text-gold"
-            >
-              {t('hiw.ctaButton')}
-            </Link>
-          </Card>
+          <CtaPanel
+            className="mt-14"
+            title={t('hiw.ctaTitle')}
+            body={t('hiw.ctaBody')}
+            primary={{ to: paths.positionSizeCalculator, label: t('hiw.ctaButton') }}
+            secondary={{ to: paths.riskManagement, label: t('risk.title') }}
+          />
         </div>
       </Section>
     </>

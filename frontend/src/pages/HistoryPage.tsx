@@ -4,6 +4,8 @@ import { Section } from '../components/layout/Section'
 import { PageContainer } from '../components/layout/PageContainer'
 import { Card } from '../components/common/Card'
 import { Button } from '../components/common/Button'
+import { WorkspaceHeader } from '../components/common/WorkspaceHeader'
+import { StatePanel } from '../components/common/StatePanel'
 import { useAuth } from '../auth/useAuth'
 import { formatDate, formatNumber, formatTime } from '../utils/format'
 import { cn } from '../utils/cn'
@@ -19,8 +21,8 @@ import { useLanguage } from '../i18n/useLanguage'
 
 function positionBadge(position: 'BUY' | 'SELL') {
   return cn(
-    'inline-block rounded-full px-2.5 py-0.5 text-xs font-medium',
-    position === 'BUY' ? 'text-success' : 'text-error',
+    'inline-flex items-center rounded-md px-2 py-0.5 font-mono text-[0.6875rem] font-semibold uppercase tracking-wider',
+    position === 'BUY' ? 'bg-success/15 text-success' : 'bg-error/15 text-error',
   )
 }
 
@@ -49,12 +51,10 @@ function CalculationCard({
   }
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="lift overflow-hidden">
       <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span className={cn('text-xs font-semibold', positionBadge(item.position))}>
-            {item.position}
-          </span>
+          <span className={positionBadge(item.position)}>{item.position}</span>
           <span className="font-mono text-sm font-medium text-text">{item.symbol}</span>
           <span className="text-sm text-text-muted">
             {t('history.entry')}{' '}
@@ -179,55 +179,57 @@ export function HistoryPage() {
     [token],
   )
 
+  const subtitle =
+    calculations.length === 0
+      ? t('history.subtitleEmpty')
+      : t(
+          calculations.length === 1 ? 'history.subtitleCount' : 'history.subtitleCountOther',
+          { count: calculations.length },
+        )
+
   return (
-    <Section className="pt-14 sm:pt-16">
+    <Section className="pt-10 sm:pt-12">
       <PageContainer>
-        <h1 className="text-3xl font-semibold text-text sm:text-4xl">{t('history.title')}</h1>
-        <p className="mt-2 text-base text-text-muted">
-          {calculations.length === 0
-            ? t('history.subtitleEmpty')
-            : t(
-                calculations.length === 1 ? 'history.subtitleCount' : 'history.subtitleCountOther',
-                { count: calculations.length },
-              )}
-        </p>
+        <WorkspaceHeader
+          eyebrow={t('navigation.history')}
+          title={t('history.title')}
+          subtitle={subtitle}
+        />
 
         {error !== null && (
-          <div role="alert" className="mt-6 rounded-md border border-error bg-error-muted px-4 py-3">
-            <p className="text-sm font-medium text-text">{t('history.unableToLoad')}</p>
-            <p className="mt-1 text-sm text-text-muted">
-              {error === 'No API base URL is configured for this environment.'
+          <StatePanel
+            variant="error"
+            className="mt-6"
+            title={t('history.unableToLoad')}
+            body={
+              error === 'No API base URL is configured for this environment.'
                 ? t('history.apiUnreachable')
-                : t('history.tryAgain')}
-            </p>
-            <Button type="button" variant="secondary" size="sm" className="mt-3" onClick={load}>
-              {t('history.retry')}
-            </Button>
-          </div>
+                : t('history.tryAgain')
+            }
+            action={
+              <Button type="button" variant="secondary" size="sm" onClick={load}>
+                {t('history.retry')}
+              </Button>
+            }
+          />
         )}
 
         {loading ? (
-          <div role="status" className="mt-8 flex items-center gap-3 text-text-muted">
-            <span
-              aria-hidden="true"
-              className="h-4 w-4 animate-spin rounded-full border-2 border-border-strong border-t-gold"
-            />
-            <span className="text-sm">{t('history.loading')}</span>
-          </div>
+          <StatePanel variant="loading" className="mt-8" title={t('history.loading')} />
         ) : (
           <>
             {calculations.length === 0 && !error && (
-              <Card className="mt-8 px-6 py-12 text-center">
-                <h2 className="text-base font-semibold text-text">{t('history.emptyTitle')}</h2>
-                <p className="mx-auto mt-2 max-w-md text-sm text-text-muted">
-                  {t('history.emptyBody')}
-                </p>
-                <Link to={paths.calculator}>
-                  <Button type="button" className="mt-6">
-                    {t('history.goToCalculator')}
-                  </Button>
-                </Link>
-              </Card>
+              <StatePanel
+                variant="empty"
+                className="mt-8"
+                title={t('history.emptyTitle')}
+                body={t('history.emptyBody')}
+                action={
+                  <Link to={paths.calculator}>
+                    <Button type="button">{t('history.goToCalculator')}</Button>
+                  </Link>
+                }
+              />
             )}
 
             {calculations.length > 0 && (

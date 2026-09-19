@@ -18,7 +18,7 @@ export function PositionToggle({ value, onChange }: PositionToggleProps) {
           {t('calc.buy')} / {t('calc.sell')}
         </span>
       </div>
-      <div className="grid grid-cols-2 gap-1 rounded-md border border-border-strong bg-surface p-1">
+      <div className="grid grid-cols-2 gap-1 rounded-xl border border-border-strong bg-surface p-1 shadow-inner shadow-card-shadow/50">
         <button
           type="button"
           role="radio"
@@ -26,10 +26,10 @@ export function PositionToggle({ value, onChange }: PositionToggleProps) {
           aria-label={t('calc.buy')}
           onClick={() => onChange('BUY')}
           className={cn(
-            'inline-flex items-center justify-center gap-2 rounded px-3 py-2 text-sm font-semibold transition-colors duration-150',
+            'inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors duration-150',
             value === 'BUY'
-              ? 'bg-success text-bg'
-              : 'text-text-muted hover:text-text',
+              ? 'bg-success text-bg shadow-sm'
+              : 'text-text-muted hover:bg-surface-raised hover:text-text',
           )}
         >
           <IconTrendUp className="h-4 w-4 rtl:scale-x-[-1]" />
@@ -42,10 +42,10 @@ export function PositionToggle({ value, onChange }: PositionToggleProps) {
           aria-label={t('calc.sell')}
           onClick={() => onChange('SELL')}
           className={cn(
-            'inline-flex items-center justify-center gap-2 rounded px-3 py-2 text-sm font-semibold transition-colors duration-150',
+            'inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors duration-150',
             value === 'SELL'
-              ? 'bg-error text-bg'
-              : 'text-text-muted hover:text-text',
+              ? 'bg-error text-bg shadow-sm'
+              : 'text-text-muted hover:bg-surface-raised hover:text-text',
           )}
         >
           <IconTrendDown className="h-4 w-4 rtl:scale-x-[-1]" />

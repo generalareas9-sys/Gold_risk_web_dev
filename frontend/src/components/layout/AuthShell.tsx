@@ -1,17 +1,13 @@
 import type { ReactNode } from 'react'
 import { Logo } from '../common/Logo'
-import { Card } from '../common/Card'
 import { PageContainer } from './PageContainer'
+import { Sparkline } from '../common/Decor'
 import { useLanguage } from '../../i18n/useLanguage'
 
 interface AuthShellProps {
-  /** Card heading, e.g. auth.welcomeBack. */
   title: string
-  /** Card subheading, e.g. auth.loginSubtitle. */
   subtitle: string
-  /** Content inside the card: form fields, actions, and the OAuth split. */
   children: ReactNode
-  /** Content rendered below the card (e.g. the account-switch link). */
   footer?: ReactNode
 }
 
@@ -50,6 +46,34 @@ function AuthBranding() {
       <p className="mt-5 max-w-md text-lg leading-relaxed text-text-muted">
         {dict.footer.tagline}
       </p>
+
+      <div className="surface-panel relative mt-8 max-w-md overflow-hidden rounded-2xl border border-border p-6 shadow-xl shadow-card-shadow">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 pattern-grid opacity-40" />
+        <div className="relative">
+          <div className="flex items-center justify-between gap-3">
+            <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-text-muted">
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-teal" />
+              XAUUSDc
+            </span>
+            <span className="font-mono text-xs text-text-faint">EXNESS</span>
+          </div>
+          <div className="mt-4 h-20">
+            <Sparkline variant="gold" />
+          </div>
+          <div className="mt-4 flex items-end justify-between gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-wider text-text-faint">
+                {dict.home.preview.recommendedLot}
+              </p>
+              <p className="text-gradient-gold font-mono text-3xl font-semibold">0.08</p>
+            </div>
+            <span className="rounded-lg border border-teal/30 bg-teal/10 px-3 py-1.5 font-mono text-xs text-teal">
+              1 : 3.11
+            </span>
+          </div>
+        </div>
+      </div>
+
       <ul className="mt-9 space-y-5">
         {points.map((point) => (
           <li key={point.title} className="flex gap-3.5">
@@ -65,19 +89,15 @@ function AuthBranding() {
   )
 }
 
-/**
- * Premium auth-page shell: a calm gold-lit background, a compact brand
- * header on mobile, and on desktop a branding column beside a focused,
- * centered panel. Values map between RTL and LTR via logical utilities.
- */
 export function AuthShell({ title, subtitle, children, footer }: AuthShellProps) {
   const { dict } = useLanguage()
 
   return (
     <div className="relative overflow-hidden">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-28 end-[14%] h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
-        <div className="absolute -bottom-16 start-[-8%] h-80 w-80 rounded-full bg-gold/5 blur-3xl" />
+        <div className="absolute inset-0 pattern-grid-fade opacity-60" />
+        <div className="absolute -top-28 end-[14%] h-96 w-96 rounded-full bg-[radial-gradient(closest-side,var(--color-hero-glow),transparent)] blur-2xl" />
+        <div className="absolute -bottom-16 start-[-8%] h-80 w-80 rounded-full bg-[radial-gradient(closest-side,var(--color-glow-soft),transparent)] blur-2xl" />
       </div>
 
       <PageContainer className="relative grid min-h-[calc(100vh-6rem)] items-center gap-10 py-10 sm:py-14 lg:grid-cols-[1fr_minmax(0,26rem)] lg:gap-20">
@@ -89,13 +109,17 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
             <p className="text-sm text-text-muted">{dict.footer.tagline}</p>
           </div>
 
-          <Card className="p-8">
-            <div className="text-center">
+          <div className="surface-panel relative overflow-hidden rounded-3xl border border-border p-8 shadow-2xl shadow-card-shadow">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"
+            />
+            <div className="relative text-center">
               <h1 className="text-xl font-semibold text-text">{title}</h1>
               <p className="mt-1 text-sm text-text-muted">{subtitle}</p>
             </div>
-            <div className="mt-6 flex flex-col">{children}</div>
-          </Card>
+            <div className="relative mt-6 flex flex-col">{children}</div>
+          </div>
 
           {footer && <div className="mt-6">{footer}</div>}
         </div>

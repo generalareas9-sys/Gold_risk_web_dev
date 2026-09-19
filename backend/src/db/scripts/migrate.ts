@@ -32,10 +32,10 @@ async function main(): Promise<void> {
     )
   }
 
- const client = new Client({
-  connectionString: config.database.connectionString,
-  ssl: { rejectUnauthorized: false },
-})
+  const client = new Client({
+    connectionString: config.database.connectionString,
+    ssl: config.database.ssl,
+  })
   await client.connect()
 
   try {

@@ -12,7 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-gold text-on-gold shadow-md shadow-gold-glow/40 hover:bg-gold-strong active:bg-gold-muted disabled:bg-gold-muted disabled:text-text-faint',
+    'bg-gradient-to-b from-gold-strong to-gold text-on-gold shadow-md shadow-gold-glow/40 hover:from-gold hover:to-gold-strong hover:shadow-gold-glow/60 active:from-gold-muted active:to-gold-muted disabled:from-gold-muted disabled:to-gold-muted disabled:text-text-faint',
   secondary:
     'bg-transparent text-text border border-border-strong hover:border-gold hover:text-gold hover:shadow-md hover:shadow-gold-glow/20 disabled:text-text-faint disabled:border-border',
   ghost:

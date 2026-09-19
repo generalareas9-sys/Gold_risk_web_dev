@@ -1,63 +1,80 @@
 import { Link } from 'react-router-dom'
 import { Section } from '../components/layout/Section'
-import { Card } from '../components/common/Card'
+import { PageHero } from '../components/common/PageHero'
+import { IconBadge } from '../components/common/IconBadge'
+import { Sparkline } from '../components/common/Decor'
+import { Callout } from '../components/common/Callout'
+import { IconCoins } from '../components/common/Icons'
 import { paths } from '../routes/paths'
 import { useLanguage } from '../i18n/useLanguage'
 
 export function SupportedInstrumentsPage() {
   const { t } = useLanguage()
 
+  const specs = [
+    { label: t('inst.contractSize'), value: '1' },
+    { label: t('inst.minimumLot'), value: '0.01' },
+    { label: t('inst.maximumLot'), value: '200' },
+    { label: t('inst.lotStep'), value: '0.01' },
+  ]
+
+  const aside = (
+    <div className="surface-panel relative overflow-hidden rounded-2xl border border-border p-6 shadow-2xl shadow-card-shadow">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 pattern-grid opacity-40" />
+      <div className="relative">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2 className="font-mono text-2xl font-semibold text-gold">XAUUSDc</h2>
+            <p className="mt-1 text-sm text-text-muted">{t('inst.cardSubtitle')}</p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-medium text-gold">
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />
+            {t('inst.currentlyConfigured')}
+          </span>
+        </div>
+        <div className="mt-6 h-24">
+          <Sparkline variant="gold" />
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <>
-      <Section className="border-b border-border pb-10 pt-14 sm:pt-16">
-        <div className="max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-wider text-gold">
-            {t('inst.eyebrow')}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold text-text sm:text-4xl">{t('inst.title')}</h1>
-          <p className="mt-4 text-base leading-relaxed text-text-muted">{t('inst.intro')}</p>
+      <PageHero
+        eyebrow={t('inst.eyebrow')}
+        title={t('inst.title')}
+        intro={t('inst.intro')}
+        aside={aside}
+      />
+
+      <Section className="band border-b border-border">
+        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+          <div className="max-w-2xl">
+            <IconBadge icon={IconCoins} tone="gold" />
+            <h2 className="mt-5 text-xl font-semibold text-text">{t('inst.whatTitle')}</h2>
+            <p className="mt-3 text-base leading-relaxed text-text-muted">{t('inst.whatBody')}</p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold text-text">{t('inst.contractTitle')}</h2>
+            <dl className="mt-4 grid grid-cols-2 gap-3">
+              {specs.map((spec) => (
+                <div
+                  key={spec.label}
+                  className="rounded-2xl border border-border bg-surface p-4"
+                >
+                  <dt className="text-xs uppercase tracking-wider text-text-faint">{spec.label}</dt>
+                  <dd className="stat-value mt-1 text-lg font-semibold text-text">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
-      </Section>
 
-      <Section className="pt-10">
-        <div className="max-w-3xl">
-          <Card className="border-gold bg-surface-raised px-6 py-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 className="font-mono text-2xl font-semibold text-gold">XAUUSDc</h2>
-                <p className="mt-1 text-sm text-text-muted">{t('inst.cardSubtitle')}</p>
-              </div>
-              <span className="rounded-full border border-gold px-2.5 py-0.5 text-xs text-gold">
-                {t('inst.currentlyConfigured')}
-              </span>
-            </div>
-          </Card>
-
-          <h2 className="mt-8 text-xl font-semibold text-text">{t('inst.whatTitle')}</h2>
-          <p className="mt-3 text-base leading-relaxed text-text-muted">{t('inst.whatBody')}</p>
-
-          <h2 className="mt-8 text-xl font-semibold text-text">{t('inst.contractTitle')}</h2>
-          <dl className="mt-4 grid grid-cols-2 gap-3 rounded-md border border-border bg-surface px-5 py-5 sm:grid-cols-4">
-            <div>
-              <dt className="text-xs text-text-faint">{t('inst.contractSize')}</dt>
-              <dd className="mt-0.5 font-mono text-sm text-text">1</dd>
-            </div>
-            <div>
-              <dt className="text-xs text-text-faint">{t('inst.minimumLot')}</dt>
-              <dd className="mt-0.5 font-mono text-sm text-text">0.01</dd>
-            </div>
-            <div>
-              <dt className="text-xs text-text-faint">{t('inst.maximumLot')}</dt>
-              <dd className="mt-0.5 font-mono text-sm text-text">200</dd>
-            </div>
-            <div>
-              <dt className="text-xs text-text-faint">{t('inst.lotStep')}</dt>
-              <dd className="mt-0.5 font-mono text-sm text-text">0.01</dd>
-            </div>
-          </dl>
-
-          <p className="mt-8 text-sm leading-relaxed text-text-muted">{t('inst.note')}</p>
-          <p className="mt-4 text-sm text-text-muted">
+        <div className="mt-10 max-w-3xl">
+          <Callout tone="info">{t('inst.note')}</Callout>
+          <p className="mt-6 text-sm text-text-muted">
             {t('inst.seeBrokers')}{' '}
             <Link
               to={paths.supportedBrokers}

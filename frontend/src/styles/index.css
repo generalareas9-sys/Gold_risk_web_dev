@@ -33,6 +33,19 @@
   --color-warning: var(--color-warning);
   --color-warning-muted: var(--color-warning-muted);
 
+  --color-navy: var(--color-navy);
+  --color-info: var(--color-info);
+  --color-info-muted: var(--color-info-muted);
+  --color-teal: var(--color-teal);
+  --color-teal-muted: var(--color-teal-muted);
+
+  --color-grid-line: var(--color-grid-line);
+  --color-grid-line-strong: var(--color-grid-line-strong);
+  --color-dot: var(--color-dot);
+  --color-chart-line: var(--color-chart-line);
+  --color-chart-fill: var(--color-chart-fill);
+  --color-chart-gold: var(--color-chart-gold);
+
   --color-focus-ring: var(--color-focus-ring);
 
   --color-footer-bg: var(--color-footer-bg);
@@ -179,6 +192,138 @@
   ::selection {
     background-color: var(--color-gold-muted);
     color: var(--color-text);
+  }
+}
+
+/* =====================================================================
+ * Pattern + depth utilities
+ *
+ * Layered backgrounds are what separate a premium trading surface from a
+ * flat dashboard. These are intentionally quiet: they read as texture, not
+ * decoration, and every one derives from tokens so both themes stay in sync.
+ * ===================================================================== */
+
+/* Fine market grid — the "chart paper" backdrop for heroes and panels. */
+.pattern-grid {
+  background-image:
+    linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+/* Same grid, faded toward the edges so it never fights the content. */
+.pattern-grid-fade {
+  background-image:
+    linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(80% 70% at 50% 30%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(80% 70% at 50% 30%, #000 20%, transparent 78%);
+}
+
+/* Dot matrix — lighter alternative for auth/side panels. */
+.pattern-dots {
+  background-image: radial-gradient(var(--color-dot) 1.1px, transparent 1.1px);
+  background-size: 22px 22px;
+}
+
+/* 45° engraving lines — used sparingly on deep CTA/hero bands. */
+.pattern-lines {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--color-grid-line) 0,
+    var(--color-grid-line) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+}
+
+/* Gold gradient text for a single hero keyword — never whole headings. */
+.text-gradient-gold {
+  background-image: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hairline divider that fades to nothing at both ends. */
+.divider-glow {
+  height: 1px;
+  border: 0;
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--color-border-strong),
+    transparent
+  );
+}
+
+/* Soft top light on a raised panel — reads as a light source above it. */
+.surface-glow-top {
+  position: relative;
+}
+.surface-glow-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: radial-gradient(120% 90% at 50% -20%, var(--color-band-glow), transparent 65%);
+}
+
+/* Gradient-stroked card surface used by premium feature/plan cards. */
+.surface-panel {
+  background-image: var(--gradient-panel);
+}
+
+/* Interactive lift — restrained; relies on prefers-reduced-motion below. */
+.lift {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.28s ease;
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -22px var(--color-card-shadow);
+}
+
+/* Entrance reveal — subtle, staggered via inline `animation-delay`. */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal {
+  animation: reveal-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Compact KPI tile used in hero stat rows and dashboard summaries. */
+.stat-tile {
+  border: 1px solid var(--color-border);
+  border-radius: 0.875rem;
+  background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  backdrop-filter: blur(6px);
+  padding: 0.875rem 1rem;
+}
+.stat-tile .stat-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift,
+  .lift:hover {
+    transform: none;
+    transition: none;
+  }
+  .reveal {
+    animation: none;
   }
 }
 

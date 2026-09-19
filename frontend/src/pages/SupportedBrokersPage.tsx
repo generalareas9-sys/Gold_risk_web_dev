@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Section } from '../components/layout/Section'
+import { PageHero } from '../components/common/PageHero'
+import { IconBadge } from '../components/common/IconBadge'
+import { IconGlobe, IconCheck } from '../components/common/Icons'
 import { paths } from '../routes/paths'
 import { useLanguage } from '../i18n/useLanguage'
 
@@ -9,7 +12,6 @@ interface BrokerReference {
   website: string
 }
 
-/** Reference list. Only the marked broker is configured in the calculator engine. */
 const brokers: BrokerReference[] = [
   { name: 'HFM', account: 'Cent Account', website: 'https://www.hfm.com' },
   { name: 'Altum Brokers', account: 'Cent Account', website: 'https://altumbrokers.com' },
@@ -29,19 +31,35 @@ function BrokerCard({ broker, index }: { broker: BrokerReference; index: number 
     broker.name === 'Exness' && broker.account.toLowerCase().includes('standard cent')
 
   return (
-    <li className="flex flex-col rounded-2xl border border-border bg-surface p-5 shadow-sm transition-colors duration-200 hover:border-border-strong">
+    <li
+      className={`lift group relative flex flex-col overflow-hidden rounded-2xl border p-5 ${
+        configured
+          ? 'border-gold/40 bg-surface'
+          : 'border-border bg-surface hover:border-border-strong'
+      }`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent to-transparent ${
+          configured ? 'via-gold/60' : 'via-border-strong opacity-0 group-hover:opacity-100'
+        }`}
+      />
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="text-base font-semibold text-text">{broker.name}</h3>
-          <p className="mt-0.5 font-mono text-sm text-gold">{broker.account}</p>
+        <div className="flex items-center gap-3">
+          <IconBadge icon={configured ? IconCheck : IconGlobe} tone={configured ? 'gold' : 'neutral'} size="sm" />
+          <div>
+            <h3 className="text-base font-semibold text-text">{broker.name}</h3>
+            <p className="mt-0.5 font-mono text-sm text-gold">{broker.account}</p>
+          </div>
         </div>
         <span
           className={
             configured
-              ? 'whitespace-nowrap rounded-full border border-gold px-2.5 py-0.5 text-xs text-gold'
-              : 'whitespace-nowrap rounded-full border border-border-strong px-2.5 py-0.5 text-xs text-text-faint'
+              ? 'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-gold/40 bg-gold/10 px-2.5 py-1 text-xs font-medium text-gold'
+              : 'whitespace-nowrap rounded-full border border-border-strong px-2.5 py-1 text-xs text-text-faint'
           }
         >
+          {configured && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />}
           {configured ? t('brokers.currentlyConfigured') : t('brokers.reference')}
         </span>
       </div>
@@ -66,19 +84,13 @@ export function SupportedBrokersPage() {
 
   return (
     <>
-      <Section className="border-b border-border pb-10 pt-14 sm:pt-16">
-        <div className="max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-wider text-gold">
-            {t('brokers.eyebrow')}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold text-text sm:text-4xl">
-            {t('brokers.title')}
-          </h1>
-          <p className="mt-4 text-base leading-relaxed text-text-muted">{t('brokers.intro')}</p>
-        </div>
-      </Section>
+      <PageHero
+        eyebrow={t('brokers.eyebrow')}
+        title={t('brokers.title')}
+        intro={t('brokers.intro')}
+      />
 
-      <Section className="pt-10">
+      <Section className="band border-b border-border">
         <div className="max-w-3xl">
           <h2 className="text-2xl font-semibold text-text">{t('brokers.configuredTitle')}</h2>
           <p className="mt-3 text-base leading-relaxed text-text-muted">

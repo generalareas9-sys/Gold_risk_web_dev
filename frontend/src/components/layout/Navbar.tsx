@@ -32,7 +32,7 @@ const MENU_BUTTON_VISIBLE = 'xl:hidden'
 const linkClasses = ({ isActive }: { isActive: boolean }) =>
   cn(
     'relative whitespace-nowrap rounded-lg px-1.5 py-2 text-sm font-semibold transition-colors duration-150',
-    'after:absolute after:inset-x-1.5 after:bottom-[1px] after:h-0.5 after:origin-center after:scale-x-0 after:rounded-full after:bg-gold after:transition-transform after:duration-200',
+    'after:absolute after:inset-x-1.5 after:bottom-[1px] after:h-0.5 after:origin-center after:scale-x-0 after:rounded-full after:bg-gradient-to-r after:from-gold-muted after:via-gold after:to-gold-muted after:transition-transform after:duration-200',
     isActive ? 'text-gold after:scale-x-100' : 'text-text-muted hover:bg-surface-raised hover:text-text',
   )
 
@@ -121,8 +121,12 @@ export function Navbar() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"
       />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 pattern-grid opacity-[0.25]"
+      />
 
-      <div className="mx-auto grid h-16 w-full max-w-none grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:px-6 lg:px-6 xl:px-5 xl:max-w-[1536px]">
+      <div className="relative mx-auto grid h-16 w-full max-w-none grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:px-6 lg:px-6 xl:px-5 xl:max-w-[1536px]">
         {/* ZONE 1 — Brand */}
         <NavLink
           to={isAuthenticated ? paths.calculator : paths.home}
