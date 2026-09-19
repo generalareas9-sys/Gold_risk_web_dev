@@ -6,6 +6,7 @@ import { createApp, type AppDependencies } from '../app.ts'
 import type { UserRecord, UserRepository } from '../db/usersRepository.ts'
 import type { TokenStore } from '../db/tokenStore.ts'
 import { signTestToken } from './jwt.ts'
+import { registerUser as registerUserService } from './authService.ts'
 
 const PASSWORD = 'Sup3rSecret!'
 
@@ -190,6 +191,30 @@ describe('POST /api/auth/register', () => {
 
     expect(res.status).toBe(409)
     expect(res.body.error.message).toContain('already exists')
+  })
+
+  it('maps a DB unique-violation on INSERT to 409 (race path)', async () => {
+    // MemoryUserRepository never raises 23505, so simulate the concurrent
+    // insert directly against registerUser: the findByEmail pre-check passes
+    // (user not visible yet) and the database rejects the INSERT with the
+    // Postgres unique_violation error code.
+    class RacingUserRepository extends MemoryUserRepository {
+      override async create(): Promise<UserRecord> {
+        const error = new Error('duplicate key value violates unique constraint')
+        ;(error as { code?: string }).code = '23505'
+        throw error
+      }
+    }
+
+    await expect(
+      registerUserService(new RacingUserRepository(), {
+        email: 'race@example.com',
+        password: PASSWORD,
+      }),
+    ).rejects.toMatchObject({
+      status: 409,
+      message: 'An account with this email already exists.',
+    })
   })
 })
 

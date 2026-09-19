@@ -37,6 +37,15 @@ function throwValidationError(errors: FieldErrors): never {
   throw new HttpError(400, 'Validation failed.', errors)
 }
 
+/** True for PostgreSQL error code 23505 (unique_violation, e.g. users_email_lower_uidx). */
+function isUniqueViolation(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    (error as { code?: unknown }).code === '23505'
+  )
+}
+
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
 }
@@ -65,8 +74,18 @@ export async function registerUser(
   }
 
   const passwordHash = await hashPassword(password)
-  const user = await userRepository.create(normalizedEmail, passwordHash, displayName)
-  return toPublicUser(user)
+  try {
+    const user = await userRepository.create(normalizedEmail, passwordHash, displayName)
+    return toPublicUser(user)
+  } catch (error) {
+    // Two requests with the same email can both pass the findByEmail pre-check;
+    // the unique index makes the second INSERT fail with 23505. Surface that
+    // race as the same 409 the sequential path already returns.
+    if (isUniqueViolation(error)) {
+      throw new HttpError(409, 'An account with this email already exists.')
+    }
+    throw error
+  }
 }
 
 /** Authenticates a user and returns an access token. Throws HttpError 401 on failure. */
