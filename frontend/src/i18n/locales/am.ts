@@ -415,6 +415,9 @@ const am = {
   calc: {
     tradeInputs: 'የግብይት ዝርዝሮች',
     tradeSetup: 'የንግድ ዝግጅት',
+    sectionAccount: 'መለያ',
+    sectionRisk: 'ስጋት',
+    sectionPosition: 'ፖዚሽን',
     currencyChipUsc: '{{value}} {{currency}} = $1',
     currencyChipUsd: 'መለያ በUSD',
     loadingAccounts: 'የተቀመጡ መለያዎች በመጫን ላይ…',
@@ -467,6 +470,11 @@ const am = {
     actualRisk: 'ትክክለኛ ስጋት (የተዞረ)',
     riskReward: 'ስጋት / መመለሻ',
     potentialProfit: 'ሊገኝ የሚችል ትርፍ',
+    riskMapTitle: 'የስጋት ካርታ',
+    riskMapLoss: 'ኪሳራ',
+    riskMapEntry: 'መግቢያ',
+    riskMapProfit: 'ትርፍ',
+    riskMapNoTp: 'የሽልማት ጎኑን ለማየት የትርፍ ኢላማ አስገባ።',
     empty:
       'የግብይትህን ዝርዝሮች አስገባ እና አስላ የሚለውን ተጫን። ኪሳራዎች በፍጥነት በጀትህን ሊያልፉ ይችላሉ፤ ትዕዛዙን ከማስቀመጥህ በፊት ትክክለኛውን ስጋት ገምግም።',
     invalid: 'መረጃው የማቀናበሪያ ፍተሻዎችን እስካላለፈ ድረስ የሚታይ ነገር የለም።',

@@ -3,6 +3,7 @@ import type { CalculatorResult } from '../../types/calculator'
 import type { AccountSpec } from '../../calculator/accounts'
 import { Button } from '../common/Button'
 import { IconCalculator } from '../common/Icons'
+import { RiskBar } from './RiskBar'
 import { cn } from '../../utils/cn'
 import { useLanguage } from '../../i18n/useLanguage'
 import { translateEngineMessages } from '../../i18n/engineMessages'
@@ -154,7 +155,13 @@ export function ResultPanel({ account, result, onCopyLot }: ResultPanelProps) {
       </div>
 
       {result != null && result.valid && (
-        <dl className="relative grid grid-cols-2 gap-3">
+        <div className="reveal">
+          <RiskBar result={result} />
+        </div>
+      )}
+
+      {result != null && result.valid && (
+        <dl className="reveal relative grid grid-cols-2 gap-3">
           <MetricTile
             label={t('result.exactLot')}
             value={`${formatNumber(result.exactLot, 4)} ${t('result.lots')}`}

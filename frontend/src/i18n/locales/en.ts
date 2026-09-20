@@ -481,6 +481,9 @@ const en = {
   calc: {
     tradeInputs: 'Trade Inputs',
     tradeSetup: 'Trade Setup',
+    sectionAccount: 'Account',
+    sectionRisk: 'Risk',
+    sectionPosition: 'Position',
     currencyChipUsc: '{{value}} {{currency}} = $1',
     currencyChipUsd: 'USD account',
     loadingAccounts: 'Loading saved accounts…',
@@ -533,6 +536,11 @@ const en = {
     actualRisk: 'Actual risk (rounded)',
     riskReward: 'Risk / reward',
     potentialProfit: 'Potential profit',
+    riskMapTitle: 'Risk Map',
+    riskMapLoss: 'Loss',
+    riskMapEntry: 'Entry',
+    riskMapProfit: 'Profit',
+    riskMapNoTp: 'Set a take profit to see the reward side.',
     empty:
       'Enter your trade details and press Calculate. Losing trades can quickly exceed your budget — review the actual risk before placing the order.',
     invalid: 'Nothing to show until the inputs pass the trade-setup checks.',

@@ -415,6 +415,9 @@ const de = {
   calc: {
     tradeInputs: 'Handelsdetails',
     tradeSetup: 'Trade-Setup',
+    sectionAccount: 'Konto',
+    sectionRisk: 'Risiko',
+    sectionPosition: 'Position',
     currencyChipUsc: '{{value}} {{currency}} = 1 $',
     currencyChipUsd: 'Konto in USD',
     loadingAccounts: 'Gespeicherte Konten werden geladen…',
@@ -467,6 +470,11 @@ const de = {
     actualRisk: 'Reales Risiko (abgerundet)',
     riskReward: 'Risiko / Rendite',
     potentialProfit: 'Möglicher Gewinn',
+    riskMapTitle: 'Risikokarte',
+    riskMapLoss: 'Verlust',
+    riskMapEntry: 'Einstieg',
+    riskMapProfit: 'Gewinn',
+    riskMapNoTp: 'Gib ein Take-Profit an, um die Gewinnseite zu sehen.',
     empty:
       'Gib deine Handelsdetails ein und klicke auf Berechnen. Verluste können dein Budget schnell übersteigen: Prüfe das reale Risiko, bevor du den Auftrag aufgibst.',
     invalid: 'Nichts anzuzeigen, bis die Daten die Einrichtungsprüfungen bestehen.',

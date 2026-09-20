@@ -415,6 +415,9 @@ const es = {
   calc: {
     tradeInputs: 'Datos de la operación',
     tradeSetup: 'Configuración de la operación',
+    sectionAccount: 'Cuenta',
+    sectionRisk: 'Riesgo',
+    sectionPosition: 'Posición',
     currencyChipUsc: '{{value}} {{currency}} = $1',
     currencyChipUsd: 'Cuenta en USD',
     loadingAccounts: 'Cargando cuentas guardadas…',
@@ -467,6 +470,11 @@ const es = {
     actualRisk: 'Riesgo real (redondeado)',
     riskReward: 'Riesgo / beneficio',
     potentialProfit: 'Beneficio potencial',
+    riskMapTitle: 'Mapa de riesgo',
+    riskMapLoss: 'Pérdida',
+    riskMapEntry: 'Entrada',
+    riskMapProfit: 'Beneficio',
+    riskMapNoTp: 'Añade un take-profit para ver el lado de la recompensa.',
     empty:
       'Introduce los datos de tu operación y pulsa Calcular. Las pérdidas pueden superar rápidamente tu presupuesto: revisa el riesgo real antes de colocar la orden.',
     invalid: 'Nada que mostrar hasta que los datos pasen las comprobaciones de configuración.',

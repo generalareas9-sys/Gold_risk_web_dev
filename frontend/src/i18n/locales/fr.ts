@@ -416,6 +416,9 @@ googleSignInFailed:
   calc: {
     tradeInputs: 'Détails du trade',
     tradeSetup: 'Configuration de l’opération',
+    sectionAccount: 'Compte',
+    sectionRisk: 'Risque',
+    sectionPosition: 'Position',
     currencyChipUsc: '{{value}} {{currency}} = 1 $',
     currencyChipUsd: 'Compte en USD',
     loadingAccounts: 'Chargement des comptes enregistrés…',
@@ -468,6 +471,11 @@ googleSignInFailed:
     actualRisk: 'Risque réel (arrondi)',
     riskReward: 'Risque / bénéfice',
     potentialProfit: 'Bénéfice potentiel',
+    riskMapTitle: 'Carte du risque',
+    riskMapLoss: 'Perte',
+    riskMapEntry: 'Entrée',
+    riskMapProfit: 'Bénéfice',
+    riskMapNoTp: 'Ajoute un take-profit pour voir le côté récompense.',
     empty:
       'Saisis les détails de ton trade puis clique sur Calculer. Les pertes peuvent dépasser rapidement ton budget : vérifie le risque réel avant de passer l’ordre.',
     invalid: 'Rien à afficher tant que les données ne passent pas les vérifications de configuration.',

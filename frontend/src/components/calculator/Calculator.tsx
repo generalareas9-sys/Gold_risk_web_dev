@@ -11,7 +11,16 @@ import { Select } from '../common/Select'
 import { Button } from '../common/Button'
 import { PositionToggle } from './PositionToggle'
 import { ResultPanel } from './ResultPanel'
-import { IconLayers, IconWallet, IconPercent, IconChart, IconStop, IconTarget } from '../common/Icons'
+import {
+  IconLayers,
+  IconWallet,
+  IconPercent,
+  IconChart,
+  IconStop,
+  IconTarget,
+  IconScale,
+  IconCandles,
+} from '../common/Icons'
 import { useAuth } from '../../auth/useAuth'
 import { createCalculation } from '../../services/calculationsApi'
 import { paths } from '../../routes/paths'
@@ -166,6 +175,10 @@ export function Calculator() {
                 : t('calc.currencyChipUsd')}
             </span>
           </div>
+          <div className="flex items-center gap-2 pt-1 text-[0.6875rem] font-semibold uppercase tracking-wider text-text-faint">
+            <IconWallet className="h-3.5 w-3.5 text-gold/70" aria-hidden="true" />
+            {t('calc.sectionAccount')}
+          </div>
           <div className="flex items-end gap-3">
             <div className="flex-1">
               <Select
@@ -229,6 +242,10 @@ export function Calculator() {
             </dl>
           )}
 
+          <div className="flex items-center gap-2 pt-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-text-faint">
+            <IconScale className="h-3.5 w-3.5 text-gold/70" aria-hidden="true" />
+            {t('calc.sectionRisk')}
+          </div>
           <div className="grid gap-5 sm:grid-cols-2">
             <Input
               label={t('accounts.balanceLabel')}
@@ -264,6 +281,10 @@ export function Calculator() {
             startSlot={<IconPercent className="h-4 w-4" />}
           />
 
+          <div className="flex items-center gap-2 pt-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-text-faint">
+            <IconCandles className="h-3.5 w-3.5 text-gold/70" aria-hidden="true" />
+            {t('calc.sectionPosition')}
+          </div>
           <PositionToggle value={calc.position} onChange={calc.onPositionChange} />
 
           <div className="grid gap-5 sm:grid-cols-2">

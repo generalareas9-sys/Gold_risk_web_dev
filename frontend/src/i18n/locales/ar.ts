@@ -416,6 +416,9 @@ const ar = {
   calc: {
     tradeInputs: 'تفاصيل الصفقة',
     tradeSetup: 'إعداد الصفقة',
+    sectionAccount: 'الحساب',
+    sectionRisk: 'المخاطرة',
+    sectionPosition: 'المركز',
     currencyChipUsc: '{{value}} {{currency}} = $1',
     currencyChipUsd: 'حساب بالدولار',
     loadingAccounts: 'جارٍ تحميل الحسابات المحفوظة…',
@@ -468,6 +471,11 @@ const ar = {
     actualRisk: 'المخاطرة الفعلية (مقرّبة)',
     riskReward: 'نسبة العائد / الخسارة',
     potentialProfit: 'الربح المحتمل',
+    riskMapTitle: 'خريطة المخاطر',
+    riskMapLoss: 'خسارة',
+    riskMapEntry: 'دخول',
+    riskMapProfit: 'ربح',
+    riskMapNoTp: 'أدخل هدف ربح لرؤية جانب المكافأة.',
     empty:
       'أدخل تفاصيل صفقتك ثم اضغط حساب. يمكن للخسائر أن تتجاوز ميزانيتك بسرعة: راجع المخاطرة الفعلية قبل وضع الأمر.',
     invalid: 'لا شيء لعرضه حتى تجتاز البيانات فحوصات الإعداد.',
