@@ -484,6 +484,38 @@ describe('Trading account management', () => {
         .send({ ...ACCOUNT_PAYLOAD, accountName: 'exness standard cent' })
       expect(res.status).toBe(409)
     })
+
+    it('creates an account with an optional first specification', async () => {
+      const { app } = createTestApp()
+      const { token } = await registerAndLogin(app)
+      const createRes = await request(app)
+        .post('/api/accounts')
+        .set(authHeader(token))
+        .send({ ...ACCOUNT_PAYLOAD, specification: SPEC_PAYLOAD })
+
+      expect(createRes.status).toBe(201)
+      const accountId = createRes.body.data.account.id as string
+      expect(createRes.body.data.account.specification).toBeUndefined()
+
+      const detail = await request(app)
+        .get(`/api/accounts/${accountId}`)
+        .set(authHeader(token))
+      expect(detail.status).toBe(200)
+      expect(detail.body.data.specifications).toHaveLength(1)
+      expect(detail.body.data.specifications[0]).toMatchObject(SPEC_PAYLOAD)
+      expect(detail.body.data.specifications[0].tradingAccountId).toBe(accountId)
+    })
+
+    it('rejects an invalid optional specification on account create', async () => {
+      const { app } = createTestApp()
+      const { token } = await registerAndLogin(app)
+      const res = await request(app)
+        .post('/api/accounts')
+        .set(authHeader(token))
+        .send({ ...ACCOUNT_PAYLOAD, specification: { ...SPEC_PAYLOAD, contractSize: 0 } })
+      expect(res.status).toBe(400)
+      expect(res.body.error.errors.contractSize).toBeDefined()
+    })
   })
 
   // ------------------------------------------------------------------

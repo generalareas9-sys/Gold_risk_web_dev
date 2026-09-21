@@ -64,11 +64,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (res.ok) {
         setToken(storedToken)
         setUser(res.data.data.user)
-      } else {
+      } else if (res.error.status === 401) {
+        // The stored token is genuinely expired or revoked: drop the session.
         clearAuthStorage()
         setToken(null)
         setUser(null)
       }
+      // A transient network/server failure (no HTTP status or a 5xx) does not
+      // mean the stored token is invalid, so the session is kept and pages
+      // surface a retryable error instead of logging the user out.
       setIsLoading(false)
     })()
 

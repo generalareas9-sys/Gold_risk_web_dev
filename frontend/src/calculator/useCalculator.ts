@@ -10,6 +10,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { calculate as runCalculation } from './CalculatorEngine'
 import type { CalculatorInput, CalculatorResult, PositionType, RiskMode } from '../types/calculator'
 import { accounts as defaultAccounts, type AccountSpec } from './accounts'
+import { saveSelectedAccountId } from './selectedAccount'
 
 function toValidNumber(raw: string): number | null {
   const trimmed = raw.trim().replace(/,/g, '')
@@ -46,10 +47,20 @@ export interface UseCalculatorReturn {
 
 export function useCalculator(
   accountsList: AccountSpec[] = defaultAccounts,
+  initialAccountId: string | null = null,
 ): UseCalculatorReturn {
   const firstAccount = accountsList[0] ?? defaultAccounts[0]
 
-  const [accountId, setAccountId] = useState<string>(firstAccount.id)
+  const [accountId, setAccountId] = useState<string>(() => {
+    if (
+      initialAccountId !== null &&
+      (accountsList.some((a) => a.id === initialAccountId) ||
+        defaultAccounts.some((a) => a.id === initialAccountId))
+    ) {
+      return initialAccountId
+    }
+    return firstAccount.id
+  })
 
   const account = useMemo(() => {
     const found =
@@ -77,6 +88,7 @@ export function useCalculator(
         defaultAccounts.find((a) => a.id === id)
       if (!next) return
       setAccountId(next.id)
+      saveSelectedAccountId(next.id)
       setBalance(String(next.defaultBalance))
       setRiskMode(next.defaultRiskMode)
       setRiskValue(String(next.defaultRiskValue))

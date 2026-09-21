@@ -50,7 +50,12 @@ export function createAccountsController(
 
     async createAccount(req: Request, res: Response): Promise<void> {
       const user = requireAuthUser(req)
-      const account = await accountService.createAccount(accountsRepository, user.id, req.body)
+      const account = await accountService.createAccount(
+        accountsRepository,
+        specificationsRepository,
+        user.id,
+        req.body,
+      )
       res.status(201).json({ success: true, data: { account } })
     },
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Section } from '../components/layout/Section'
 import { PageContainer } from '../components/layout/PageContainer'
 import { Card } from '../components/common/Card'
@@ -7,12 +7,12 @@ import { Input } from '../components/common/Input'
 import { WorkspaceHeader } from '../components/common/WorkspaceHeader'
 import { StatePanel } from '../components/common/StatePanel'
 import { useAuth } from '../auth/useAuth'
+import { useAccounts } from '../accounts/useAccounts'
+import { readSelectedAccountId, saveSelectedAccountId, clearSelectedAccountId } from '../calculator/selectedAccount'
 import { formatNumber, formatDate } from '../utils/format'
 import { cn } from '../utils/cn'
-import type { Account, Specification } from '../services/accountsApi'
+import type { Account, Specification, SpecificationCreatePayload } from '../services/accountsApi'
 import {
-  listAccounts,
-  listSpecifications,
   createAccount,
   updateAccount,
   deleteAccount,
@@ -54,6 +54,21 @@ const emptySpecificationForm: SpecificationFormValues = {
   minimumLot: '0.01',
   maximumLot: '100',
   lotStep: '0.01',
+}
+
+/**
+ * The starter specification attached when a new account is created. It mirrors
+ * the built-in reference account (Exness Standard Cent: XAUUSDc, contract size
+ * 1, min 0.01 / max 200 lots, lot step 0.01) so a newly created account is
+ * immediately usable by the calculator. The specification remains fully
+ * editable on the Accounts page afterwards.
+ */
+const starterAccountSpecification: SpecificationCreatePayload = {
+  symbol: 'XAUUSDc',
+  contractSize: 1,
+  minimumLot: 0.01,
+  maximumLot: 200,
+  lotStep: 0.01,
 }
 
 function toPositiveNumber(raw: string): number | null {
@@ -314,15 +329,16 @@ function SpecificationForm({
 }
 
 function SpecificationsSection({
-  account,
+  specifications,
   token,
+  accountId,
   onChanged,
 }: {
-  account: Account
+  specifications: Specification[]
   token: string
+  accountId: string
   onChanged: () => void
 }) {
-  const [specifications, setSpecifications] = useState<Specification[] | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [editingSpec, setEditingSpec] = useState<Specification | null>(null)
   const [specError, setSpecError] = useState<string | null>(null)
@@ -330,26 +346,10 @@ function SpecificationsSection({
   const [deletingSpecId, setDeletingSpecId] = useState<string | null>(null)
   const { t } = useLanguage()
 
-  useEffect(() => {
-    let cancelled = false
-    void (async () => {
-      const res = await listSpecifications(token, account.id)
-      if (cancelled) return
-      if (res.ok) {
-        setSpecifications(res.data.data.specifications)
-      } else {
-        setSpecifications([])
-      }
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [token, account.id, showForm])
-
   async function handleCreate(values: SpecificationFormValues) {
     setSubmitting(true)
     setSpecError(null)
-    const res = await createSpecification(token, account.id, {
+    const res = await createSpecification(token, accountId, {
       symbol: values.symbol.trim(),
       contractSize: toPositiveNumber(values.contractSize) as number,
       minimumLot: toPositiveNumber(values.minimumLot) as number,
@@ -370,7 +370,7 @@ function SpecificationsSection({
     if (editingSpec === null) return
     setSubmitting(true)
     setSpecError(null)
-    const res = await updateSpecification(token, account.id, editingSpec.id, {
+    const res = await updateSpecification(token, accountId, editingSpec.id, {
       symbol: values.symbol.trim(),
       contractSize: toPositiveNumber(values.contractSize) as number,
       minimumLot: toPositiveNumber(values.minimumLot) as number,
@@ -389,10 +389,9 @@ function SpecificationsSection({
 
   async function handleDeleteSpec(specId: string) {
     setDeletingSpecId(specId)
-    const res = await deleteSpecification(token, account.id, specId)
+    const res = await deleteSpecification(token, accountId, specId)
     setDeletingSpecId(null)
     if (res.ok) {
-      setSpecifications((prev) => (prev === null ? prev : prev.filter((s) => s.id !== specId)))
       onChanged()
     } else {
       setSpecError(res.error.message)
@@ -432,15 +431,7 @@ function SpecificationsSection({
         </button>
       </div>
 
-      {specifications === null ? (
-        <p role="status" className="mt-3 flex items-center gap-2 text-xs text-text-faint">
-          <span
-            aria-hidden="true"
-            className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-border-strong border-t-gold"
-          />
-          {t('accounts.loadingSpecs')}
-        </p>
-      ) : specifications.length === 0 && !showForm ? (
+      {specifications.length === 0 && !showForm ? (
         <p className="mt-3 text-xs text-text-faint">{t('accounts.noSpecs')}</p>
       ) : (
         <div className="mt-3 flex flex-col gap-2">
@@ -521,12 +512,14 @@ function SpecificationsSection({
 
 function AccountCard({
   account,
+  specifications,
   token,
   onDeleted,
   onChanged,
   onStartEdit,
 }: {
   account: Account
+  specifications: Specification[]
   token: string
   onDeleted: () => void
   onChanged: () => void
@@ -658,7 +651,12 @@ function AccountCard({
         )}
 
         <div className="mt-4 border-t border-border pt-4">
-          <SpecificationsSection account={account} token={token} onChanged={onChanged} />
+          <SpecificationsSection
+            specifications={specifications}
+            token={token}
+            accountId={account.id}
+            onChanged={onChanged}
+          />
         </div>
       </div>
     </Card>
@@ -667,32 +665,23 @@ function AccountCard({
 
 export function AccountsPage() {
   const { token } = useAuth()
+  const { accounts: accountDetails, status, errorMessage, refresh } = useAccounts()
   const { t } = useLanguage()
-  const [accounts, setAccounts] = useState<Account[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | null>(null)
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
-  const refresh = useCallback(() => {
-    if (token === null) return
-    void (async () => {
-      const res = await listAccounts(token)
-      if (res.ok) {
-        setAccounts(res.data.data.accounts)
-        setError(null)
-      } else {
-        setError(res.error.message)
-      }
-      setLoading(false)
-    })()
-  }, [token])
+  const accounts = accountDetails.map((detail) => detail.account)
+  const loading = status === 'loading'
+  const error = status === 'error' ? errorMessage : null
 
-  useEffect(() => {
-    refresh()
-  }, [refresh])
+  function handleAccountDeleted(account: Account) {
+    if (readSelectedAccountId() === `saved-${account.id}`) {
+      clearSelectedAccountId()
+    }
+    void refresh()
+  }
 
   async function handleCreate(values: AccountFormValues) {
     if (token === null) return
@@ -705,11 +694,15 @@ export function AccountsPage() {
       currency: values.currency.trim(),
       usdConversion: toPositiveNumber(values.usdConversion) as number,
       balance: toNonNegativeNumber(values.balance) as number,
+      specification: starterAccountSpecification,
     })
     setSubmitting(false)
     if (res.ok) {
       setShowCreateForm(false)
-      setAccounts((prev) => [...prev, res.data.data.account])
+      // Select the freshly created account so it is active when the user
+      // opens the Calculator.
+      saveSelectedAccountId(`saved-${res.data.data.account.id}`)
+      void refresh()
     } else {
       setFormError(res.error.message)
     }
@@ -730,7 +723,7 @@ export function AccountsPage() {
     setSubmitting(false)
     if (res.ok) {
       setEditingAccount(null)
-      setAccounts((prev) => prev.map((a) => (a.id === res.data.data.account.id ? res.data.data.account : a)))
+      void refresh()
     } else {
       setFormError(res.error.message)
     }
@@ -859,16 +852,20 @@ export function AccountsPage() {
               </div>
             )}
 
-            {accounts.map((account) => (
-              <AccountCard
-                key={account.id}
-                account={account}
-                token={token as string}
-                onDeleted={() => setAccounts((prev) => prev.filter((a) => a.id !== account.id))}
-                onChanged={() => refresh()}
-                onStartEdit={() => startEdit(account)}
-              />
-            ))}
+            {accounts.map((account) => {
+              const detail = accountDetails.find((d) => d.account.id === account.id)
+              return (
+                <AccountCard
+                  key={account.id}
+                  account={account}
+                  specifications={detail?.specifications ?? []}
+                  token={token as string}
+                  onDeleted={() => handleAccountDeleted(account)}
+                  onChanged={() => void refresh()}
+                  onStartEdit={() => startEdit(account)}
+                />
+              )
+            })}
           </div>
         )}
       </PageContainer>

@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCalculator } from '../../calculator/useCalculator'
-import { accounts as builtInAccounts, type AccountSpec } from '../../calculator/accounts'
-import type { Account, Specification } from '../../services/accountsApi'
-import { listAccounts, getAccount } from '../../services/accountsApi'
+import { accounts as builtInAccounts, toCalculatorAccountSpecs } from '../../calculator/accounts'
+import { readSelectedAccountId } from '../../calculator/selectedAccount'
+import { useAccounts } from '../../accounts/useAccounts'
 import type { RiskMode } from '../../types/calculator'
 import { Card } from '../common/Card'
 import { Input } from '../common/Input'
@@ -28,75 +28,32 @@ import { cn } from '../../utils/cn'
 import { useLanguage } from '../../i18n/useLanguage'
 import { translateEngineMessage } from '../../i18n/engineMessages'
 
-function toAccountSpec(account: Account, spec: Specification): AccountSpec | null {
-  if (account.currency !== 'USD' && account.currency !== 'USC') return null
-  return {
-    id: `saved-${account.id}`,
-    name: account.accountName,
-    broker: account.broker,
-    accountType: account.accountType,
-    symbol: spec.symbol,
-    contractSize: spec.contractSize,
-    minimumLot: spec.minimumLot,
-    lotStep: spec.lotStep,
-    maximumLot: spec.maximumLot,
-    currency: account.currency,
-    uscPerUsd: account.usdConversion,
-    defaultBalance: account.balance,
-    defaultRiskMode: 'ACCOUNT_CURRENCY',
-    defaultRiskValue: 100,
-    tradingAccountId: account.id,
-  }
-}
-
 export function Calculator() {
   const { isAuthenticated, token } = useAuth()
   const navigate = useNavigate()
   const { t } = useLanguage()
 
-  const [savedAccounts, setSavedAccounts] = useState<AccountSpec[] | null>(null)
+  const { accounts: savedAccountDetails, status: accountsStatus } = useAccounts()
   const [showAdvanced, setShowAdvanced] = useState(false)
 
-  useEffect(() => {
-    if (!isAuthenticated || token === null) return
-    let cancelled = false
-    void (async () => {
-      const listRes = await listAccounts(token)
-      if (cancelled) return
-      if (!listRes.ok) {
-        setSavedAccounts([])
-        return
-      }
-      const specs: AccountSpec[] = []
-      for (const account of listRes.data.data.accounts) {
-        if (cancelled) break
-        const detailRes = await getAccount(token, account.id)
-        if (cancelled) break
-        if (!detailRes.ok) continue
-        for (const spec of detailRes.data.data.specifications) {
-          const mapped = toAccountSpec(account, spec)
-          if (mapped !== null) specs.push(mapped)
-        }
-      }
-      if (cancelled) return
-      setSavedAccounts(specs)
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [isAuthenticated, token])
-
-  const accountsLoading = isAuthenticated && savedAccounts === null
+  const accountsLoading = isAuthenticated && accountsStatus === 'loading'
 
   const accountOptions = useMemo(
     () => [
       ...builtInAccounts,
-      ...(isAuthenticated && savedAccounts !== null ? savedAccounts : []),
+      ...(isAuthenticated && accountsStatus !== 'loading'
+        ? toCalculatorAccountSpecs(savedAccountDetails)
+        : []),
     ],
-    [isAuthenticated, savedAccounts],
+    [isAuthenticated, accountsStatus, savedAccountDetails],
   )
 
-  const calc = useCalculator(accountOptions)
+  // The user's last selection is restored from storage so navigating between
+  // pages does not lose it. The provider falls back to the built-in account
+  // when the stored id no longer resolves.
+  const initialAccountId = useMemo(() => readSelectedAccountId(), [])
+
+  const calc = useCalculator(accountOptions, initialAccountId)
   const { account } = calc
 
   const inputErrors = useMemo(() => {

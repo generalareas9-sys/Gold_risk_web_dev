@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthProvider'
+import { AccountsProvider } from './accounts/AccountsProvider'
 import { LanguageProvider } from './i18n'
 import { ThemeProvider } from './theme/ThemeProvider'
 import App from './App.tsx'
@@ -13,7 +14,9 @@ createRoot(document.getElementById('root')!).render(
       <LanguageProvider>
         <ThemeProvider>
           <AuthProvider>
-            <App />
+            <AccountsProvider>
+              <App />
+            </AccountsProvider>
           </AuthProvider>
         </ThemeProvider>
       </LanguageProvider>

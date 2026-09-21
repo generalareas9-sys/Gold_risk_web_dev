@@ -35,6 +35,8 @@ export interface AccountCreatePayload {
   balance?: number
   isActive?: boolean
   isDefault?: boolean
+  /** Optional first specification created atomically with the account. */
+  specification?: SpecificationCreatePayload
 }
 
 export interface AccountUpdatePayload {

@@ -10,6 +10,7 @@ import {
   updateSpecification,
   deleteSpecification,
   type Account,
+  type AccountCreatePayload,
   type Specification,
 } from './accountsApi'
 
@@ -138,6 +139,39 @@ describe('accountsApi', () => {
     expect(init?.method).toBe('POST')
     expect(init?.body).toBe(JSON.stringify(payload))
     expect(authValue(init)).toBe(`Bearer ${TOKEN}`)
+  })
+
+  it('creates an account with an optional starter specification', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse(201, { success: true, data: { account: ACCOUNT } }),
+      ),
+    )
+
+    const payload: AccountCreatePayload = {
+      accountName: 'Exness Standard Cent',
+      broker: 'Exness',
+      accountType: 'Standard Cent',
+      currency: 'USC',
+      usdConversion: 100,
+      specification: {
+        symbol: 'XAUUSDc',
+        contractSize: 1,
+        minimumLot: 0.01,
+        maximumLot: 200,
+        lotStep: 0.01,
+      },
+    }
+    const res = await createAccount(TOKEN, payload)
+
+    expect(res.ok).toBe(true)
+    if (!res.ok) return
+    expect(res.data.data.account.id).toBe('1')
+
+    const { init } = lastFetch()
+    expect(init?.method).toBe('POST')
+    expect(init?.body).toBe(JSON.stringify(payload))
   })
 
   it('updates an account via PATCH', async () => {

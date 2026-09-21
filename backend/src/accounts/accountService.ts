@@ -106,9 +106,18 @@ async function assertAccountOwned(
   }
 }
 
-/** Creates a trading account for the authenticated user. */
+/**
+ * Creates a trading account for the authenticated user.
+ *
+ * An optional `specification` object may be included in the body so a caller
+ * can create the account's first specification (the data the calculator needs
+ * to work with the account) atomically with the account itself. The field is
+ * validated with the same rules as a standalone specification create and is
+ * otherwise opt-in — omitting it produces exactly the previous behaviour.
+ */
 export async function createAccount(
   accountsRepository: AccountRepository,
+  specificationsRepository: SpecificationRepository,
   userId: string,
   body: unknown,
 ): Promise<PublicAccount> {
@@ -125,6 +134,13 @@ export async function createAccount(
     throw new HttpError(409, 'An account with this name already exists.')
   }
 
+  if (record.specification !== undefined) {
+    const specErrors = validateSpecificationCreate(record.specification)
+    if (hasFieldErrors(specErrors)) {
+      throwValidationError(specErrors)
+    }
+  }
+
   const recordCreated = await accountsRepository.create({
     userId,
     accountName,
@@ -136,6 +152,18 @@ export async function createAccount(
     isActive: record.isActive === undefined ? true : Boolean(record.isActive),
     isDefault: record.isDefault === undefined ? false : Boolean(record.isDefault),
   })
+
+  if (record.specification !== undefined) {
+    const spec = asRecord(record.specification)
+    await specificationsRepository.create(userId, recordCreated.id, {
+      symbol: String(spec.symbol).trim(),
+      contractSize: toNumber(spec, 'contractSize'),
+      minimumLot: toNumber(spec, 'minimumLot'),
+      maximumLot: toNumber(spec, 'maximumLot'),
+      lotStep: toNumber(spec, 'lotStep'),
+    })
+  }
+
   return toPublicAccount(recordCreated)
 }
 

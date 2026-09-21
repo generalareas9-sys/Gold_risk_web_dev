@@ -9,6 +9,7 @@
  */
 
 import type { AccountCurrency, RiskMode } from '../types/calculator'
+import type { AccountWithSpecs } from '../accounts/accountsContext'
 
 export interface AccountSpec {
   id: string
@@ -53,4 +54,39 @@ export const accounts: AccountSpec[] = [
 
 export function getAccountById(id: string): AccountSpec | undefined {
   return accounts.find((a) => a.id === id)
+}
+
+/**
+ * Maps saved trading accounts (with their specifications) into calculator
+ * account configurations. Each saved account yields exactly one entry built
+ * from its first specification (the specifications list is ordered by symbol),
+ * so the selector shows each saved account once. Accounts the calculator
+ * cannot model — non-USD/USC currencies or accounts without a specification —
+ * are skipped instead of being misrepresented.
+ */
+export function toCalculatorAccountSpecs(accountsWithSpecs: AccountWithSpecs[]): AccountSpec[] {
+  const specs: AccountSpec[] = []
+  for (const { account, specifications } of accountsWithSpecs) {
+    if (account.currency !== 'USD' && account.currency !== 'USC') continue
+    const first = specifications[0]
+    if (first === undefined) continue
+    specs.push({
+      id: `saved-${account.id}`,
+      name: account.accountName,
+      broker: account.broker,
+      accountType: account.accountType,
+      symbol: first.symbol,
+      contractSize: first.contractSize,
+      minimumLot: first.minimumLot,
+      lotStep: first.lotStep,
+      maximumLot: first.maximumLot,
+      currency: account.currency,
+      uscPerUsd: account.usdConversion,
+      defaultBalance: account.balance,
+      defaultRiskMode: 'ACCOUNT_CURRENCY',
+      defaultRiskValue: 100,
+      tradingAccountId: account.id,
+    })
+  }
+  return specs
 }
